@@ -17,6 +17,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] public float parallaxMultiplier = 1.0f;
     [SerializeField] private float spawnDelay = 1f;
     [SerializeField] private float yRange = 5f;
+    [SerializeField] private bool paused = true;
+
+    [Header("UI")]
+    [SerializeField] private SpriteRenderer startCounter;
+    [SerializeField] private Sprite one;
+    [SerializeField] private Sprite two;
+    [SerializeField] private Sprite three;
+    [SerializeField] private Sprite four;
+    [SerializeField] private Sprite five;
+    [SerializeField] private Sprite brawl;
 
     void Start()
     {
@@ -28,6 +38,8 @@ public class GameManager : MonoBehaviour
 
     private void LevelSetup()
     {
+        paused = true;
+
         foreach(Transform p in levelPlatforms)
         {
             Destroy(p.gameObject);
@@ -46,11 +58,21 @@ public class GameManager : MonoBehaviour
 
         playerTransform.position = new Vector3(0, 0, 0);
         player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+
+        background.position = new Vector3(0, 0, 69);
+        background2.position = new Vector3(100, 0, 69);
+
+        StartCoroutine(Countdown());
     }
 
 
     void FixedUpdate()
     {
+        if (paused)
+        {
+            return;
+        }
+
         if(playerTransform.position.y < killFloor)
         {
             OnPlayerFell();
@@ -111,5 +133,75 @@ public class GameManager : MonoBehaviour
             GenerateNewPlatform();
             yield return new WaitForSeconds(spawnDelay);
         }
+    }
+
+    private IEnumerator UnpauseAfter(float time)
+    {
+        yield return new WaitForSeconds(time);
+        paused = false;
+    }
+
+    private IEnumerator Countdown()
+    {
+        startCounter.enabled = true;
+
+        if (Random.Range(1, 10) <= 6) // expected value = 0.2 (chance of wrong countdown happening)
+        {
+            for(short i = 3; i >= 1; i--)
+            {
+                CounterNumber(i);
+                yield return new WaitForSeconds(1);
+            }
+        }
+        else
+        {
+            short times = (short) Random.Range(2, 6);
+            //while(Random.Range(1, 10) <= 8) // expected value = 5 (number of numbers displayed)
+            for(short i = 0; i < times; i++)
+            {
+                CounterNumber((short) Random.Range(1, 5));
+                yield return new WaitForSeconds(1);
+            }
+        }
+        SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Brawl);
+        startCounter.sprite = brawl;
+        yield return new WaitForSeconds(1);
+        startCounter.enabled = false;
+        paused = false;
+    }
+
+    private void CounterNumber(short n)
+    {
+        SoundManager.AudioFX clip;
+        Sprite sprite;
+        switch (n)
+        {
+            case 5:
+                clip = SoundManager.AudioFX.Five;
+                sprite = five;
+                break;
+            case 4:
+                clip = SoundManager.AudioFX.Four;
+                sprite = four;
+                break;
+            case 3:
+                clip = SoundManager.AudioFX.Three;
+                sprite = three;
+                break;
+            case 2:
+                clip = SoundManager.AudioFX.Two;
+                sprite = two;
+                break;
+            case 1:
+                clip = SoundManager.AudioFX.One;
+                sprite = one;
+                break;
+            default:
+                clip = SoundManager.AudioFX.Three;
+                sprite = three;
+                break;
+        }
+        SoundManager.instance.PlaySoundFX(clip);
+        startCounter.sprite = sprite;
     }
 }
