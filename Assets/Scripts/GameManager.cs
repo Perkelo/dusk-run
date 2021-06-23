@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,12 +15,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform levelGeometry;
     private List<Transform> levelPlatforms = new List<Transform>();
     [SerializeField] public float levelSpeed = 1.0f;
+    [SerializeField] public float initialLevelSpeed = 1.0f;
     [SerializeField] public float parallaxMultiplier = 1.0f;
     [SerializeField] private float spawnDelay = 1f;
     [SerializeField] private float yRange = 5f;
     [SerializeField] private bool paused = true;
 
     [Header("UI")]
+    [SerializeField] private Text scoreLabel;
+    private int score = 0;
     [SerializeField] private SpriteRenderer startCounter;
     [SerializeField] private Sprite one;
     [SerializeField] private Sprite two;
@@ -44,6 +48,11 @@ public class GameManager : MonoBehaviour
     private void LevelSetup()
     {
         paused = true;
+
+        scoreLabel.text = "Score: 0";
+        score = 0;
+
+        levelSpeed = initialLevelSpeed;
 
         foreach(Transform p in levelPlatforms)
         {
@@ -88,6 +97,15 @@ public class GameManager : MonoBehaviour
         {
             p.Translate(-levelSpeed, 0, 0);
         }
+
+        score += 1;
+        scoreLabel.text = $"Score: {score/10}";
+
+        if(score % 1000 == 0 && score != 0)
+        {
+            levelSpeed += 0.2f;
+        }
+
         background.Translate(-levelSpeed * parallaxMultiplier, 0, 0);
         background2.Translate(-levelSpeed * parallaxMultiplier, 0, 0);
 

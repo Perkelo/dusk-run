@@ -6,7 +6,6 @@ public class ParallaxScrolling : MonoBehaviour
 {
 
     private float initialZ;
-    [SerializeField] private float pFactorX = 1.0f;
     [SerializeField] private float pFactorY = 1.0f;
 
     void Start()
