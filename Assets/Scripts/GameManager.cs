@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     private Transform playerTransform;
     [SerializeField] private float killFloor = -10;
+    [SerializeField] private CameraFollow cameraFollow;
 
     [SerializeField] private Transform background;
     [SerializeField] private Transform background2;
@@ -22,7 +23,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool paused = true;
 
     [Header("UI")]
+    [SerializeField] private Canvas gameUI;
+    [SerializeField] private Canvas gameOverScreen;
     [SerializeField] private Text scoreLabel;
+    [SerializeField] private Text gameOverScoreLabel;
+    [SerializeField] private Image warning;
     private int score = 0;
     [SerializeField] private SpriteRenderer startCounter;
     [SerializeField] private Sprite one;
@@ -76,9 +81,11 @@ public class GameManager : MonoBehaviour
         background.position = new Vector3(0, 0, 69);
         background2.position = new Vector3(100, 0, 69);
 
+        gameOverScreen.enabled = false;
+        gameUI.enabled = true;
+
         StartCoroutine(Countdown());
     }
-
 
     void FixedUpdate()
     {
@@ -101,23 +108,33 @@ public class GameManager : MonoBehaviour
         score += 1;
         scoreLabel.text = $"Score: {score/10}";
 
-        if(score % 1000 == 0 && score != 0)
+        int scoremod = score % 1000;
+
+        if (scoremod == 0 && score != 0)
         {
             levelSpeed += 0.2f;
+        }
+        else if(scoremod == 850 || scoremod == 900 || scoremod == 950)
+        {
+            warning.enabled = true;
+        }
+        else if(scoremod == 875 || scoremod == 925 || scoremod == 975)
+        {
+            warning.enabled = false;
         }
 
         background.Translate(-levelSpeed * parallaxMultiplier, 0, 0);
         background2.Translate(-levelSpeed * parallaxMultiplier, 0, 0);
 
-        if (background.position.x < -80)
+        if (background.position.x < Camera.main.transform.position.x - 80)
         {
-            background.transform.position = new Vector3(100, 0, 69);
+            background.transform.position = new Vector3(background2.transform.position.x + 100, 0, 69);
             Transform tmp = background;
             background = background2;
             background2 = tmp;
         }
 
-        if(levelPlatforms[0].position.x < -80)
+        if(levelPlatforms[0].position.x < Camera.main.transform.position.x - 80)
         {
             Destroy(levelPlatforms[0].gameObject);
             levelPlatforms.RemoveAt(0);
@@ -127,7 +144,12 @@ public class GameManager : MonoBehaviour
 
     private void OnPlayerFell()
     {
-        LevelSetup();
+        cameraFollow.enabled = false;
+        paused = true;
+        gameUI.enabled = false;
+        gameOverScreen.enabled = true;
+        gameOverScoreLabel.text = $"Score: {score / 10}";
+        SoundManager.instance.PlayDeathSound();
     }
 
     private void GenerateNewPlatform(float x = 0, float y = 0, float z = 0)
@@ -140,7 +162,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            position = new Vector3(levelPlatforms[levelPlatforms.Count - 1].position.x + 20, Random.Range(-yRange, yRange), levelPlatforms[levelPlatforms.Count - 1].position.z);
+            position = new Vector3(levelPlatforms[levelPlatforms.Count - 1].position.x + 20 + score/500, Random.Range(-yRange, yRange), levelPlatforms[levelPlatforms.Count - 1].position.z);
         }
         newPlatform.transform.position = position;
         levelPlatforms.Add(newPlatform.GetComponent<Transform>());
@@ -226,5 +248,21 @@ public class GameManager : MonoBehaviour
         }
         SoundManager.instance.PlaySoundFX(clip);
         startCounter.sprite = sprite;
+    }
+
+    public void OnQuitClicked()
+    {
+        Application.Quit();
+    }
+
+    public void OnRetryClicked()
+    {
+        LevelSetup();
+        cameraFollow.enabled = true;
+    }
+
+    public void OnRetryHovered()
+    {
+        SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Continue);
     }
 }

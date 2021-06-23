@@ -13,7 +13,8 @@ public class SoundManager : MonoBehaviour
         Two,
         One,
         Brawl,
-        Mouseover
+        Mouseover,
+        Continue
     }
 
     public enum Music
@@ -36,10 +37,13 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip one;
     [SerializeField] private AudioClip brawl;
     [SerializeField] private AudioClip mouseover;
+    [SerializeField] private AudioClip announcerContinue;
     [Header("Music")]
     [SerializeField] private AudioClip level1Intro;
     [SerializeField] private AudioClip level1Loop;
     private short counter = 0;
+    [Header("Death Sounds")]
+    [SerializeField] private AudioClip[] deathSounds;
 
     private void Awake()
     {
@@ -81,6 +85,9 @@ public class SoundManager : MonoBehaviour
                 break;
             case AudioFX.Mouseover:
                 fx = mouseover;
+                break;
+            case AudioFX.Continue:
+                fx = announcerContinue;
                 break;
             default:
                 fx = brawl;
@@ -125,5 +132,14 @@ public class SoundManager : MonoBehaviour
         musicSource.pitch = 1.5f;
         musicSource.loop = true;
         musicSource.Play();
+    }
+
+    public void PlayDeathSound()
+    {
+        fxSources[counter].Stop();
+        fxSources[counter].clip = deathSounds[Random.Range(0, deathSounds.Length - 1)];
+        fxSources[counter].volume = fxVolume;
+        fxSources[counter].Play();
+        counter = (short)((counter + 1) % sourcesCount);
     }
 }
