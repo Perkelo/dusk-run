@@ -391,12 +391,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14203b1a1ad23094fbc1d386cdb064a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fxVolume: 1
+  musicVolume: 0.17
+  intro: {fileID: 0}
   five: {fileID: 8300000, guid: e9566121acd8eb74687aedbd4379ef74, type: 3}
   four: {fileID: 8300000, guid: 07bca313a46f31a45ae8836f64b6b16b, type: 3}
   three: {fileID: 8300000, guid: af7c7f52068fe544b9df7f10a80cd09b, type: 3}
   two: {fileID: 8300000, guid: 819b81699032bc04fad74182ef8f6874, type: 3}
   one: {fileID: 8300000, guid: c2a3c30cb8bd4cb449022abaf20a014e, type: 3}
   brawl: {fileID: 8300000, guid: 710ccb820c31353469331c8efc654cf7, type: 3}
+  level1Intro: {fileID: 8300000, guid: 4fded90e41404d741b311272d8a2bf33, type: 3}
+  level1Loop: {fileID: 8300000, guid: 9edd4648e86edfe4f9a2e5c56b93dc9b, type: 3}
 --- !u!4 &1491803266 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2213310894425121822, guid: c60c5c407f2dd6a4d96f4ef40a6f8432, type: 3}

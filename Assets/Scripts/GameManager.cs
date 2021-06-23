@@ -33,6 +33,11 @@ public class GameManager : MonoBehaviour
         playerTransform = player.GetComponent<Transform>();
         levelPlatforms.Add(GameObject.Find("Floor").GetComponent<Transform>());
         //StartCoroutine(GenerateLoop());
+        if(SoundManager.instance == null)
+        {
+            SoundManager.instance = gameObject.GetComponent<SoundManager>();
+        }
+        SoundManager.instance.PlayMusic(SoundManager.Music.Level1);
         LevelSetup();
     }
 
@@ -145,7 +150,7 @@ public class GameManager : MonoBehaviour
     {
         startCounter.enabled = true;
 
-        if (Random.Range(1, 10) <= 6) // expected value = 0.2 (chance of wrong countdown happening)
+        if (Random.Range(1, 10) <= 7) // expected value = 0.2 (chance of wrong countdown happening)
         {
             for(short i = 3; i >= 1; i--)
             {
