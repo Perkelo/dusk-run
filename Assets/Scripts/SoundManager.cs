@@ -118,6 +118,7 @@ public class SoundManager : MonoBehaviour
         }
 
         musicSource.Stop();
+        musicSource.pitch = 1.0f;
         musicSource.clip = intro;
         musicSource.volume = musicVolume;
         musicSource.Play();
@@ -141,5 +142,31 @@ public class SoundManager : MonoBehaviour
         fxSources[counter].volume = fxVolume;
         fxSources[counter].Play();
         counter = (short)((counter + 1) % sourcesCount);
+    }
+
+    public void ChangeMusicSpeed(float newSpeed, float time = 0.5f)
+    {
+        StartCoroutine(ChangeMusicSpeedCoroutine(newSpeed, time));
+    }
+    public void IncreaseMusicSpeed(float increment, float time = 0.5f)
+    {
+        ChangeMusicSpeed(musicSource.pitch + increment, time);
+    }
+
+    private IEnumerator ChangeMusicSpeedCoroutine(float newSpeed, float time)
+    {
+        float elapsedTime = 0;
+        float initialSpeed = musicSource.pitch;
+        while(time - elapsedTime > 0)
+        {
+            musicSource.pitch = Mathf.Lerp(initialSpeed, newSpeed, elapsedTime / time);
+            elapsedTime += Time.deltaTime;
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    public void ResetMusicSpeed(float time = 0.5f)
+    {
+        ChangeMusicSpeed(1.5f, time);
     }
 }

@@ -27,7 +27,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Canvas gameOverScreen;
     [SerializeField] private Text scoreLabel;
     [SerializeField] private Text gameOverScoreLabel;
+    [SerializeField] private Text gameOverHighScoreLabel;
     [SerializeField] private Image warning;
+    [SerializeField] private Image levelUpImage;
+    [SerializeField] private Sprite[] levelUpSprites;
     private int score = 0;
     [SerializeField] private SpriteRenderer startCounter;
     [SerializeField] private Sprite one;
@@ -112,7 +115,7 @@ public class GameManager : MonoBehaviour
 
         if (scoremod == 0 && score != 0)
         {
-            levelSpeed += 0.2f;
+            OnSpeedUp();
         }
         else if(scoremod == 850 || scoremod == 900 || scoremod == 950)
         {
@@ -146,10 +149,31 @@ public class GameManager : MonoBehaviour
     {
         cameraFollow.enabled = false;
         paused = true;
+        warning.enabled = false;
         gameUI.enabled = false;
         gameOverScreen.enabled = true;
         gameOverScoreLabel.text = $"Score: {score / 10}";
         SoundManager.instance.PlayDeathSound();
+
+        if (!PlayerPrefs.HasKey("HighScore"))
+        {
+            PlayerPrefs.SetInt("HighScore", score / 10);
+            PlayerPrefs.Save();
+            gameOverHighScoreLabel.enabled = false;
+        }
+        else
+        {
+            int highScore = PlayerPrefs.GetInt("HighScore");
+            if(score / 10 > highScore)
+            {
+                highScore = score / 10;
+                PlayerPrefs.SetInt("HighScore", highScore);
+                PlayerPrefs.Save();
+            }
+            gameOverHighScoreLabel.enabled = true;
+            gameOverHighScoreLabel.text = $"High Score: {highScore}";
+        }
+
     }
 
     private void GenerateNewPlatform(float x = 0, float y = 0, float z = 0)
@@ -258,11 +282,28 @@ public class GameManager : MonoBehaviour
     public void OnRetryClicked()
     {
         LevelSetup();
+        SoundManager.instance.ResetMusicSpeed();
         cameraFollow.enabled = true;
     }
 
     public void OnRetryHovered()
     {
         SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Continue);
+    }
+
+    private void OnSpeedUp()
+    {
+        levelSpeed += 0.2f;
+        SoundManager.instance.IncreaseMusicSpeed(0.2f);
+
+        levelUpImage.enabled = true;
+        levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
+        StartCoroutine(HideLevelUpImage(1));
+    }
+
+    private IEnumerator HideLevelUpImage(float after)
+    {
+        yield return new WaitForSeconds(after);
+        levelUpImage.enabled = false;
     }
 }
