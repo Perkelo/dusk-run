@@ -5,22 +5,15 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     public GameObject player;
     private Transform playerTransform;
     [SerializeField] private float killFloor = -10;
     [SerializeField] private CameraFollow cameraFollow;
 
-    [SerializeField] private Transform background;
-    [SerializeField] private Transform background2;
-    [SerializeField] private GameObject platform;
-    [SerializeField] private Transform levelGeometry;
-    private List<Transform> levelPlatforms = new List<Transform>();
-    [SerializeField] public float levelSpeed = 1.0f;
-    [SerializeField] public float initialLevelSpeed = 1.0f;
     [SerializeField] public float parallaxMultiplier = 1.0f;
-    [SerializeField] private float spawnDelay = 1f;
-    [SerializeField] private float yRange = 5f;
-    [SerializeField] private bool paused = true;
+    public bool paused = true;
 
     [Header("UI")]
     [SerializeField] private Canvas gameUI;
@@ -28,10 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text scoreLabel;
     [SerializeField] private Text gameOverScoreLabel;
     [SerializeField] private Text gameOverHighScoreLabel;
-    [SerializeField] private Image warning;
-    [SerializeField] private Image levelUpImage;
-    [SerializeField] private Sprite[] levelUpSprites;
-    private int score = 0;
+    public int score = 0;
     [SerializeField] private SpriteRenderer startCounter;
     [SerializeField] private Sprite one;
     [SerializeField] private Sprite two;
@@ -40,15 +30,20 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite five;
     [SerializeField] private Sprite brawl;
 
+
+    [SerializeField] private Level level;
+    [SerializeField] private Slider levelProgress;
+
     void Start()
     {
+        instance = this;
         playerTransform = player.GetComponent<Transform>();
         //StartCoroutine(GenerateLoop());
         if(AudioManager.instance == null)
         {
             AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         }
-        AudioManager.instance.PlayMusic(AudioManager.Music.Level1);
+        AudioManager.instance.PlayMusic(level.levelMusic);
         LevelSetup();
     }
 
@@ -59,32 +54,24 @@ public class GameManager : MonoBehaviour
         scoreLabel.text = "Score: 0";
         score = 0;
 
-        levelSpeed = initialLevelSpeed;
-
-        foreach(Transform p in levelPlatforms)
-        {
-            Destroy(p.gameObject);
-        }
-        //levelPlatforms.RemoveRange(0, levelPlatforms.Count - 1);
-
-        levelPlatforms.Clear();
-
-        GenerateNewPlatform(0, -4, 0);
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-
         playerTransform.position = new Vector3(0, 0, 0);
         player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
 
-        background.position = new Vector3(0, 0, 69);
-        background2.position = new Vector3(100, 0, 69);
-
         gameOverScreen.enabled = false;
         gameUI.enabled = true;
+
+        level.LevelSetup();
+
+        if(level.length > 0) //If length <= 0, it's an endless level
+        {
+            levelProgress.gameObject.SetActive(true);
+            levelProgress.maxValue = level.length;
+            levelProgress.value = 0;
+        }
+        else
+        {
+            levelProgress.gameObject.SetActive(false);
+        }
 
         StartCoroutine(Countdown());
     }
@@ -102,45 +89,27 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        foreach(Transform p in levelPlatforms)
+        level.background.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
+        level.background2.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
+
+        if (level.background.position.x < Camera.main.transform.position.x - 80)
         {
-            p.Translate(-levelSpeed, 0, 0);
+            level.background.transform.position = new Vector3(level.background2.transform.position.x + 100, 0, 69);
+            Transform tmp = level.background;
+            level.background = level.background2;
+            level.background2 = tmp;
         }
 
         score += 1;
         scoreLabel.text = $"Score: {score/10}";
 
-        int scoremod = score % 1000;
-
-        if (scoremod == 0 && score != 0)
+        if (level.length > 0)
         {
-            OnSpeedUp();
-        }
-        else if(scoremod == 850 || scoremod == 900 || scoremod == 950)
-        {
-            warning.enabled = true;
-        }
-        else if(scoremod == 875 || scoremod == 925 || scoremod == 975)
-        {
-            warning.enabled = false;
-        }
-
-        background.Translate(-levelSpeed * parallaxMultiplier, 0, 0);
-        background2.Translate(-levelSpeed * parallaxMultiplier, 0, 0);
-
-        if (background.position.x < Camera.main.transform.position.x - 80)
-        {
-            background.transform.position = new Vector3(background2.transform.position.x + 100, 0, 69);
-            Transform tmp = background;
-            background = background2;
-            background2 = tmp;
-        }
-
-        if(levelPlatforms[0].position.x < Camera.main.transform.position.x - 80)
-        {
-            Destroy(levelPlatforms[0].gameObject);
-            levelPlatforms.RemoveAt(0);
-            GenerateNewPlatform();
+            levelProgress.value = score / 10f;
+            if(score/10f >= level.length)
+            {
+                level.OnLevelEnded();
+            }
         }
     }
 
@@ -148,11 +117,13 @@ public class GameManager : MonoBehaviour
     {
         cameraFollow.enabled = false;
         paused = true;
-        warning.enabled = false;
         gameUI.enabled = false;
         gameOverScreen.enabled = true;
+        levelProgress.gameObject.SetActive(false);
         gameOverScoreLabel.text = $"Score: {score / 10}";
         AudioManager.instance.PlayDeathSound();
+
+        level.OnGameOver();
 
         if (!PlayerPrefs.HasKey("HighScore"))
         {
@@ -173,40 +144,6 @@ public class GameManager : MonoBehaviour
             gameOverHighScoreLabel.text = $"High Score: {highScore}";
         }
 
-    }
-
-    private void GenerateNewPlatform(float x = 0, float y = 0, float z = 0)
-    {
-        GameObject newPlatform = Instantiate(platform, levelGeometry);
-        Vector3 position;
-        if(x != 0 || y != 0 || z != 0)
-        {
-            position = new Vector3(x, y, z);
-        }
-        else
-        {
-            position = new Vector3(levelPlatforms[levelPlatforms.Count - 1].position.x + 20 + score/500, Random.Range(-yRange, yRange), levelPlatforms[levelPlatforms.Count - 1].position.z);
-        }
-        newPlatform.transform.position = position;
-        levelPlatforms.Add(newPlatform.GetComponent<Transform>());
-    }
-
-    private IEnumerator GenerateLoop()
-    {
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        while (true)
-        {
-            GenerateNewPlatform();
-            yield return new WaitForSeconds(spawnDelay);
-        }
-    }
-
-    private IEnumerator UnpauseAfter(float time)
-    {
-        yield return new WaitForSeconds(time);
-        paused = false;
     }
 
     private IEnumerator Countdown()
@@ -290,19 +227,4 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Continue);
     }
 
-    private void OnSpeedUp()
-    {
-        levelSpeed += 0.2f;
-        AudioManager.instance.IncreaseMusicSpeed(0.2f);
-
-        levelUpImage.enabled = true;
-        levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
-        StartCoroutine(HideLevelUpImage(1));
-    }
-
-    private IEnumerator HideLevelUpImage(float after)
-    {
-        yield return new WaitForSeconds(after);
-        levelUpImage.enabled = false;
-    }
 }
