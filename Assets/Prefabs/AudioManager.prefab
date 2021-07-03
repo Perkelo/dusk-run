@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1667710004705474787
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1667710004705474785}
+  - component: {fileID: 1667710004705474784}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1667710004705474785
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667710004705474787}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 932.3858, y: 415.05945, z: -49.273903}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1667710004705474784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667710004705474787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14203b1a1ad23094fbc1d386cdb064a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fxVolume: 1
+  musicVolume: 0.17
+  intro: {fileID: 8300000, guid: f9376f6386355f844a5a7bec0b75ce7a, type: 3}
+  five: {fileID: 8300000, guid: e9566121acd8eb74687aedbd4379ef74, type: 3}
+  four: {fileID: 8300000, guid: 07bca313a46f31a45ae8836f64b6b16b, type: 3}
+  three: {fileID: 8300000, guid: af7c7f52068fe544b9df7f10a80cd09b, type: 3}
+  two: {fileID: 8300000, guid: 819b81699032bc04fad74182ef8f6874, type: 3}
+  one: {fileID: 8300000, guid: c2a3c30cb8bd4cb449022abaf20a014e, type: 3}
+  brawl: {fileID: 8300000, guid: 710ccb820c31353469331c8efc654cf7, type: 3}
+  mouseover: {fileID: 8300000, guid: f6a3f0291aeb4d14790899e1cf713d4e, type: 3}
+  announcerContinue: {fileID: 8300000, guid: 2c963751ed1361d42b39d4d4466cdfe4, type: 3}
+  level1Intro: {fileID: 8300000, guid: 4fded90e41404d741b311272d8a2bf33, type: 3}
+  level1Loop: {fileID: 8300000, guid: 9edd4648e86edfe4f9a2e5c56b93dc9b, type: 3}
+  deathSounds:
+  - {fileID: 8300000, guid: 7ff176135ff4c7848b6dcb4b738a1343, type: 3}
+  - {fileID: 8300000, guid: 3d9312fb577b669488a3491dd63e26f4, type: 3}
+  - {fileID: 8300000, guid: d76c604e0a4c67c4ebde26e7c22dbefc, type: 3}
+  - {fileID: 8300000, guid: 71f7de72504d7b74bb98776cbcffbbda, type: 3}
+  - {fileID: 8300000, guid: a45740921ae9cd04dbdcde5ad9736c8e, type: 3}
+  - {fileID: 8300000, guid: c97234b4e806d4243a6032945e2f12bf, type: 3}
+  - {fileID: 8300000, guid: 167d0c978c2f3e046a19161f4254a64a, type: 3}
+  - {fileID: 8300000, guid: edc3e03f9de3aa64cbbc6b180b7c28ac, type: 3}

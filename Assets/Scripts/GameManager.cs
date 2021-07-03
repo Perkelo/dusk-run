@@ -43,13 +43,12 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerTransform = player.GetComponent<Transform>();
-        levelPlatforms.Add(GameObject.Find("Floor").GetComponent<Transform>());
         //StartCoroutine(GenerateLoop());
-        if(SoundManager.instance == null)
+        if(AudioManager.instance == null)
         {
-            SoundManager.instance = gameObject.GetComponent<SoundManager>();
+            AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         }
-        SoundManager.instance.PlayMusic(SoundManager.Music.Level1);
+        AudioManager.instance.PlayMusic(AudioManager.Music.Level1);
         LevelSetup();
     }
 
@@ -153,7 +152,7 @@ public class GameManager : MonoBehaviour
         gameUI.enabled = false;
         gameOverScreen.enabled = true;
         gameOverScoreLabel.text = $"Score: {score / 10}";
-        SoundManager.instance.PlayDeathSound();
+        AudioManager.instance.PlayDeathSound();
 
         if (!PlayerPrefs.HasKey("HighScore"))
         {
@@ -232,7 +231,7 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(1);
             }
         }
-        SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Brawl);
+        AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Brawl);
         startCounter.sprite = brawl;
         yield return new WaitForSeconds(1);
         startCounter.enabled = false;
@@ -241,36 +240,36 @@ public class GameManager : MonoBehaviour
 
     private void CounterNumber(short n)
     {
-        SoundManager.AudioFX clip;
+        AudioManager.AudioFX clip;
         Sprite sprite;
         switch (n)
         {
             case 5:
-                clip = SoundManager.AudioFX.Five;
+                clip = AudioManager.AudioFX.Five;
                 sprite = five;
                 break;
             case 4:
-                clip = SoundManager.AudioFX.Four;
+                clip = AudioManager.AudioFX.Four;
                 sprite = four;
                 break;
             case 3:
-                clip = SoundManager.AudioFX.Three;
+                clip = AudioManager.AudioFX.Three;
                 sprite = three;
                 break;
             case 2:
-                clip = SoundManager.AudioFX.Two;
+                clip = AudioManager.AudioFX.Two;
                 sprite = two;
                 break;
             case 1:
-                clip = SoundManager.AudioFX.One;
+                clip = AudioManager.AudioFX.One;
                 sprite = one;
                 break;
             default:
-                clip = SoundManager.AudioFX.Three;
+                clip = AudioManager.AudioFX.Three;
                 sprite = three;
                 break;
         }
-        SoundManager.instance.PlaySoundFX(clip);
+        AudioManager.instance.PlaySoundFX(clip);
         startCounter.sprite = sprite;
     }
 
@@ -282,19 +281,19 @@ public class GameManager : MonoBehaviour
     public void OnRetryClicked()
     {
         LevelSetup();
-        SoundManager.instance.ResetMusicSpeed();
+        AudioManager.instance.ResetMusicSpeed();
         cameraFollow.enabled = true;
     }
 
     public void OnRetryHovered()
     {
-        SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Continue);
+        AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Continue);
     }
 
     private void OnSpeedUp()
     {
         levelSpeed += 0.2f;
-        SoundManager.instance.IncreaseMusicSpeed(0.2f);
+        AudioManager.instance.IncreaseMusicSpeed(0.2f);
 
         levelUpImage.enabled = true;
         levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];

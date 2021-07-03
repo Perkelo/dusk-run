@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuGameManager : MonoBehaviour
-{
+public class MainMenuGameManager : MonoBehaviour {
+
+    [SerializeField] private Image storyButtonOutline;
     [SerializeField] private Image brawlButtonOutline;
     [SerializeField] private Image quitButtonOutline;
     [SerializeField] private Image free;
@@ -14,14 +15,19 @@ public class MainMenuGameManager : MonoBehaviour
 
     private void Start()
     {
-        if (SoundManager.instance == null)
+        if (AudioManager.instance == null)
         {
-            SoundManager.instance = gameObject.GetComponent<SoundManager>();
+            AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
         }
-        SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Intro);
+        AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Intro);
         StartCoroutine(AndKnuckles());
     }
-    public void OnStartGame()
+
+    public void OnStartStoryMode() {
+        SceneManager.LoadScene("Level1", LoadSceneMode.Single);
+    }
+
+    public void OnStartInfiniteMode()
     {
         SceneManager.LoadScene("Level1", LoadSceneMode.Single);
     }
@@ -30,20 +36,30 @@ public class MainMenuGameManager : MonoBehaviour
     {
         Application.Quit();
     }
+    public void OnMouseEnteredStoryModeButton() {
+        //Debug.Log("Mouse entered");
+        storyButtonOutline.enabled = true;
+        mouseover = StartCoroutine(SpamMouseOver());
+    }
 
-    public void OnMouseEnteredBrawlButton()
-    {
-        Debug.Log("Mouse entered");
+    public void OnMouseExitedStoryModeButton() {
+        //Debug.Log("Mouse Exited");
+        storyButtonOutline.enabled = false;
+        StopCoroutine(mouseover);
+    }
+
+    public void OnMouseEnteredBrawlButton() {
+        //Debug.Log("Mouse entered");
         brawlButtonOutline.enabled = true;
         mouseover = StartCoroutine(SpamMouseOver());
     }
 
-    public void OnMouseExitedBrawlButton()
-    {
-        Debug.Log("Mouse Exited");
+    public void OnMouseExitedBrawlButton() {
+        //Debug.Log("Mouse Exited");
         brawlButtonOutline.enabled = false;
         StopCoroutine(mouseover);
     }
+
     public void OnMouseEnteredQuitButton()
     {
         Debug.Log("Mouse entered");
@@ -62,7 +78,7 @@ public class MainMenuGameManager : MonoBehaviour
     {
         while (true)
         {
-            SoundManager.instance.PlaySoundFX(SoundManager.AudioFX.Mouseover);
+            AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Mouseover);
             yield return new WaitForSeconds(Random.Range(0.01f, 0.15f));
         }
     }
