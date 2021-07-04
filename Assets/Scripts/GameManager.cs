@@ -39,6 +39,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Level level;
     [SerializeField] private Slider levelProgress;
 
+    private bool isEndless = false;
+
     void Start()
     {
         instance = this;
@@ -48,6 +50,13 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log(GameObject.FindGameObjectWithTag("Level").name);
             level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
+
+			if(isEndless) {
+                level.length = -1;
+			} else {
+                isEndless = level.length > 0;
+			}
+
             if (AudioManager.instance == null)
             {
                 AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
@@ -60,10 +69,12 @@ public class GameManager : MonoBehaviour
         }
 
         if (LevelData.instance == null) {
+            isEndless = true;
             LevelData.LoadSceneAdditive(LevelData.defaultLevel, completionCallback);
         }
         else
         {
+            isEndless = false;
             LevelData.LoadSceneAdditive(LevelData.instance.level, completionCallback);
         }
     }

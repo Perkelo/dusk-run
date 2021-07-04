@@ -24,12 +24,12 @@ public class MainMenuGameManager : MonoBehaviour {
     }
 
     public void OnStartStoryMode() {
-        SceneManager.LoadScene("Level1", LoadSceneMode.Single);
+        SceneManager.LoadScene("LevelScene", LoadSceneMode.Single);
     }
 
     public void OnStartInfiniteMode()
     {
-        SceneManager.LoadScene("Level1", LoadSceneMode.Single);
+        SceneManager.LoadScene("LevelScene", LoadSceneMode.Single);
     }
 
     public void OnQuitGame()
