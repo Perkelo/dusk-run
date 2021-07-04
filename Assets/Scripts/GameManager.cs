@@ -1,6 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -21,6 +21,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text scoreLabel;
     [SerializeField] private Text gameOverScoreLabel;
     [SerializeField] private Text gameOverHighScoreLabel;
+    [SerializeField] private Text loreTitle;
+    [SerializeField] private Text loreText;
+    [SerializeField] public Image warning;
+    [SerializeField] public Image levelUpImage;
     public int score = 0;
     [SerializeField] private SpriteRenderer startCounter;
     [SerializeField] private Sprite one;
@@ -30,6 +34,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite five;
     [SerializeField] private Sprite brawl;
 
+    private readonly string loreIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia aliquet ipsum ut gravida. In ultrices hendrerit est, consequat bibendum lectus hendrerit at. Cras laoreet velit eget posuere egestas. Praesent convallis ultrices mi, eu tempor felis dictum non. Pellentesque sed risus ante. Donec tristique a turpis ut volutpat. Nunc cursus purus vel luctus congue. Nulla sit amet accumsan lectus. Aliquam erat volutpat. Quisque eros leo, eleifend et elit et, varius tempus turpis.";
 
     [SerializeField] private Level level;
     [SerializeField] private Slider levelProgress;
@@ -38,13 +43,29 @@ public class GameManager : MonoBehaviour
     {
         instance = this;
         playerTransform = player.GetComponent<Transform>();
-        //StartCoroutine(GenerateLoop());
-        if(AudioManager.instance == null)
+
+        void completionCallback(AsyncOperation action)
         {
-            AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+            Debug.Log(GameObject.FindGameObjectWithTag("Level").name);
+            level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
+            if (AudioManager.instance == null)
+            {
+                AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
+            }
+            AudioManager.instance.PlayMusic(level.levelMusic);
+            LevelSetup();
+            return;
+            loreTitle.text = "Lore Ipsum";
+            AnimateLoreText(loreIpsum, 0.005f, delegate { Debug.Log("text finished displaying"); }, 0);
         }
-        AudioManager.instance.PlayMusic(level.levelMusic);
-        LevelSetup();
+
+        if (LevelData.instance == null) {
+            LevelData.LoadSceneAdditive(LevelData.defaultLevel, completionCallback);
+        }
+        else
+        {
+            LevelData.LoadSceneAdditive(LevelData.instance.level, completionCallback);
+        }
     }
 
     private void LevelSetup()
@@ -227,4 +248,27 @@ public class GameManager : MonoBehaviour
         AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Continue);
     }
 
+    public void AnimateLoreText(string text, float interval, System.Action callback, float delayAfterEnd = 0f)
+    {
+        loreText.text = "";
+        StartCoroutine(AnimateLoreTextAux(text, interval, callback, delayAfterEnd));
+    }
+
+    private IEnumerator AnimateLoreTextAux(string text, float interval, System.Action callback, float delayAfterEnd)
+    {
+        int counter = 0;
+        while(counter < text.Length)
+        {
+            yield return new WaitForSeconds(interval);
+            loreText.text = text.Substring(0, counter);
+            counter++;
+        }
+        yield return new WaitForSeconds(delayAfterEnd);
+        callback();
+    }
+
+    public void OnLoreNextClicked()
+    {
+        Debug.Log("Next clicked");
+    }
 }

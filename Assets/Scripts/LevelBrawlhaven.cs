@@ -10,8 +10,6 @@ public class LevelBrawlhaven : Level
     private readonly List<Transform> levelPlatforms = new List<Transform>();
 
     [SerializeField] public float initialLevelSpeed = 1.0f;
-    [SerializeField] private Image warning;
-    [SerializeField] private Image levelUpImage;
     [SerializeField] private Sprite[] levelUpSprites;
     //[SerializeField] private float spawnDelay = 1f;
     [SerializeField] private float yRange = 5f;
@@ -42,7 +40,7 @@ public class LevelBrawlhaven : Level
 
     public override void OnGameOver()
     {
-        warning.enabled = false;
+        GameManager.instance.warning.enabled = false;
     }
 
     public override void OnLevelEnded()
@@ -71,15 +69,15 @@ public class LevelBrawlhaven : Level
         levelSpeed += 0.2f;
         AudioManager.instance.IncreaseMusicSpeed(0.2f);
 
-        levelUpImage.enabled = true;
-        levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
+        GameManager.instance.levelUpImage.enabled = true;
+        GameManager.instance.levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
         StartCoroutine(HideLevelUpImage(1));
     }
 
     private IEnumerator HideLevelUpImage(float after)
     {
         yield return new WaitForSeconds(after);
-        levelUpImage.enabled = false;
+        GameManager.instance.levelUpImage.enabled = false;
     }
 
     private void FixedUpdate()
@@ -102,11 +100,11 @@ public class LevelBrawlhaven : Level
         }
         else if (scoremod == 850 || scoremod == 900 || scoremod == 950)
         {
-            warning.enabled = true;
+            GameManager.instance.warning.enabled = true;
         }
         else if (scoremod == 875 || scoremod == 925 || scoremod == 975)
         {
-            warning.enabled = false;
+            GameManager.instance.warning.enabled = false;
         }
     }
 
