@@ -11,7 +11,8 @@ public class LevelData : MonoBehaviour
 
     public enum LevelScene
     {
-        Level1
+        Level1,
+        Level2
     }
 
     private void Awake()

@@ -54,8 +54,14 @@ MonoBehaviour:
   brawl: {fileID: 8300000, guid: 710ccb820c31353469331c8efc654cf7, type: 3}
   mouseover: {fileID: 8300000, guid: f6a3f0291aeb4d14790899e1cf713d4e, type: 3}
   announcerContinue: {fileID: 8300000, guid: 2c963751ed1361d42b39d4d4466cdfe4, type: 3}
+  terosGrowls:
+  - {fileID: 8300000, guid: c4b48c5026ca1434895d9bea6095d1ad, type: 3}
+  - {fileID: 8300000, guid: 58bdffd9df5515e40ba6d76dab582e38, type: 3}
+  - {fileID: 8300000, guid: ded6003973c52b44baf196e2950dd63d, type: 3}
   level1Intro: {fileID: 8300000, guid: 4fded90e41404d741b311272d8a2bf33, type: 3}
   level1Loop: {fileID: 8300000, guid: 9edd4648e86edfe4f9a2e5c56b93dc9b, type: 3}
+  shipwreckIntro: {fileID: 8300000, guid: a9ff025b4937f094ba29c309246114cb, type: 3}
+  shipwreckLoop: {fileID: 8300000, guid: dce7698aaa6752c419ba6e6c090ac63b, type: 3}
   deathSounds:
   - {fileID: 8300000, guid: 7ff176135ff4c7848b6dcb4b738a1343, type: 3}
   - {fileID: 8300000, guid: 3d9312fb577b669488a3491dd63e26f4, type: 3}

@@ -5,37 +5,17 @@ using UnityEngine.UI;
 
 public class LevelBrawlhaven : Level
 {
-    [SerializeField] private GameObject platform;
-    [SerializeField] private Transform levelGeometry;
-    private readonly List<Transform> levelPlatforms = new List<Transform>();
-
-    [SerializeField] public float initialLevelSpeed = 1.0f;
-    [SerializeField] private Sprite[] levelUpSprites;
-    //[SerializeField] private float spawnDelay = 1f;
-    [SerializeField] private float yRange = 5f;
 
     public override void LevelSetup()
     {
-        levelSpeed = initialLevelSpeed;
-
-        foreach (Transform p in levelPlatforms)
-        {
-            Destroy(p.gameObject);
-        }
-        //levelPlatforms.RemoveRange(0, levelPlatforms.Count - 1);
-
-        levelPlatforms.Clear();
-
-        GenerateNewPlatform(0, -4, 0);
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-        GenerateNewPlatform();
-
-        background.position = new Vector3(0, 0, 69);
-        background2.position = new Vector3(100, 0, 69);
+        base.LevelSetup();
+        GenerateNewPlatform(0, -4, 0, 0.7f, 0.7f);
+        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
     }
 
     public override void OnGameOver()
@@ -46,38 +26,6 @@ public class LevelBrawlhaven : Level
     public override void OnLevelEnded()
     {
         throw new System.NotImplementedException();
-    }
-
-    private void GenerateNewPlatform(float x = 0, float y = 0, float z = 0)
-    {
-        GameObject newPlatform = Instantiate(platform, levelGeometry);
-        Vector3 position;
-        if (x != 0 || y != 0 || z != 0)
-        {
-            position = new Vector3(x, y, z);
-        }
-        else
-        {
-            position = new Vector3(levelPlatforms[levelPlatforms.Count - 1].position.x + 20 + GameManager.instance.score / 500, Random.Range(-yRange, yRange), levelPlatforms[levelPlatforms.Count - 1].position.z);
-        }
-        newPlatform.transform.position = position;
-        levelPlatforms.Add(newPlatform.GetComponent<Transform>());
-    }
-
-    private void OnSpeedUp()
-    {
-        levelSpeed += 0.2f;
-        AudioManager.instance.IncreaseMusicSpeed(0.2f);
-
-        GameManager.instance.levelUpImage.enabled = true;
-        GameManager.instance.levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
-        StartCoroutine(HideLevelUpImage(1));
-    }
-
-    private IEnumerator HideLevelUpImage(float after)
-    {
-        yield return new WaitForSeconds(after);
-        GameManager.instance.levelUpImage.enabled = false;
     }
 
     private void FixedUpdate()
@@ -96,7 +44,7 @@ public class LevelBrawlhaven : Level
 
         if (scoremod == 0 && GameManager.instance.score != 0)
         {
-            OnSpeedUp();
+            OnSpeedUp(0.2f);
         }
         else if (scoremod == 850 || scoremod == 900 || scoremod == 950)
         {
@@ -105,21 +53,6 @@ public class LevelBrawlhaven : Level
         else if (scoremod == 875 || scoremod == 925 || scoremod == 975)
         {
             GameManager.instance.warning.enabled = false;
-        }
-    }
-
-    private void MovePlatforms()
-    {
-        foreach (Transform p in levelPlatforms)
-        {
-            p.Translate(-levelSpeed, 0, 0);
-        }
-
-        if (levelPlatforms[0].position.x < Camera.main.transform.position.x - 80)
-        {
-            Destroy(levelPlatforms[0].gameObject);
-            levelPlatforms.RemoveAt(0);
-            GenerateNewPlatform();
         }
     }
 }

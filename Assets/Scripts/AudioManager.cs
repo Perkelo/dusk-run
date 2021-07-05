@@ -14,12 +14,14 @@ public class AudioManager : MonoBehaviour
         One,
         Brawl,
         Mouseover,
-        Continue
+        Continue,
+        TerosGrowl
     }
 
     public enum Music
     {
-        Level1
+        Level1,
+        Shipwreck
     }
 
     [HideInInspector] public static AudioManager instance;
@@ -38,9 +40,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip brawl;
     [SerializeField] private AudioClip mouseover;
     [SerializeField] private AudioClip announcerContinue;
+    [SerializeField] private AudioClip[] terosGrowls;
     [Header("Music")]
     [SerializeField] private AudioClip level1Intro;
     [SerializeField] private AudioClip level1Loop;
+    [SerializeField] private AudioClip shipwreckIntro;
+    [SerializeField] private AudioClip shipwreckLoop;
     private short counter = 0;
     [Header("Death Sounds")]
     [SerializeField] private AudioClip[] deathSounds;
@@ -90,6 +95,9 @@ public class AudioManager : MonoBehaviour
             case AudioFX.Continue:
                 fx = announcerContinue;
                 break;
+            case AudioFX.TerosGrowl:
+                fx = terosGrowls[Random.Range(0, terosGrowls.Length-1)];
+                break;
             default:
                 fx = brawl;
                 break;
@@ -111,7 +119,7 @@ public class AudioManager : MonoBehaviour
         fxSources[counter].Play();
     }
 
-    public void PlayMusic(Music song)
+    public void PlayMusic(Music song, float pitch = 1f)
     {
         AudioClip intro;
         AudioClip loop;
@@ -120,6 +128,10 @@ public class AudioManager : MonoBehaviour
             case Music.Level1:
                 intro = level1Intro;
                 loop = level1Loop;
+                break;
+            case Music.Shipwreck:
+                intro = shipwreckIntro;
+                loop = shipwreckLoop;
                 break;
             default:
                 intro = level1Intro;
@@ -132,10 +144,10 @@ public class AudioManager : MonoBehaviour
         musicSource.clip = intro;
         musicSource.volume = musicVolume;
         musicSource.Play();
-        StartCoroutine(PlayAfter(loop, intro.length));
+        StartCoroutine(PlayAfter(loop, intro.length, pitch));
     }
 
-    private IEnumerator PlayAfter(AudioClip loop, float time)
+    private IEnumerator PlayAfter(AudioClip loop, float time, float pitch)
     {
         yield return new WaitForSeconds(time);
         musicSource.clip = loop;

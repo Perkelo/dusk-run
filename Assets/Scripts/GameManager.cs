@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text scoreLabel;
     [SerializeField] private Text gameOverScoreLabel;
     [SerializeField] private Text gameOverHighScoreLabel;
+    [SerializeField] private Canvas loreUI;
     [SerializeField] private Text loreTitle;
     [SerializeField] private Text loreText;
     [SerializeField] public Image warning;
@@ -35,6 +36,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Sprite brawl;
 
     private readonly string loreIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia aliquet ipsum ut gravida. In ultrices hendrerit est, consequat bibendum lectus hendrerit at. Cras laoreet velit eget posuere egestas. Praesent convallis ultrices mi, eu tempor felis dictum non. Pellentesque sed risus ante. Donec tristique a turpis ut volutpat. Nunc cursus purus vel luctus congue. Nulla sit amet accumsan lectus. Aliquam erat volutpat. Quisque eros leo, eleifend et elit et, varius tempus turpis.";
+
+    private readonly string bestStory = "nai has got kidnapped\nmafia\nidk\n;-;";
 
     [SerializeField] private Level level;
     [SerializeField] private Slider levelProgress;
@@ -61,11 +64,13 @@ public class GameManager : MonoBehaviour
             {
                 AudioManager.instance = GameObject.Find("AudioManager").GetComponent<AudioManager>();
             }
-            AudioManager.instance.PlayMusic(level.levelMusic);
+            AudioManager.instance.PlayMusic(level.levelMusic, level is LevelBrawlhaven ? 1.5f : 1.0f);
             LevelSetup();
             return;
-            loreTitle.text = "Lore Ipsum";
-            AnimateLoreText(loreIpsum, 0.005f, delegate { Debug.Log("text finished displaying"); }, 0);
+            loreUI.enabled = true;
+            loreTitle.text = "Best story ever (by tyler \"dexsan\" blevins";
+            AnimateLoreText(bestStory, 0.005f, delegate { Debug.Log("text finished displaying"); }, 0);
+            return;
         }
 
         if (LevelData.instance == null) {
@@ -268,7 +273,7 @@ public class GameManager : MonoBehaviour
     private IEnumerator AnimateLoreTextAux(string text, float interval, System.Action callback, float delayAfterEnd)
     {
         int counter = 0;
-        while(counter < text.Length)
+        while(counter <= text.Length)
         {
             yield return new WaitForSeconds(interval);
             loreText.text = text.Substring(0, counter);
