@@ -13,10 +13,13 @@ abstract public class Level : MonoBehaviour
     [SerializeField] private GameObject platform;
     [SerializeField] private Transform levelGeometry;
     private readonly List<Transform> levelPlatforms = new List<Transform>();
+    private readonly List<Transform> enemies = new List<Transform>();
 
     [SerializeField] public float initialLevelSpeed = 1.0f;
     [SerializeField] private float yRange = 5f;
     [SerializeField] private Sprite[] levelUpSprites;
+
+    protected LevelDelegate? levelDelegate;
 
     abstract public void OnGameOver();
 
@@ -31,7 +34,13 @@ abstract public class Level : MonoBehaviour
             Destroy(p.gameObject);
         }
 
+        foreach (Transform e in enemies)
+        {
+            Destroy(e.gameObject);
+        }
+
         levelPlatforms.Clear();
+        enemies.Clear();
 
         background.position = new Vector3(0, 0, 69);
         background2.position = new Vector3(100, 0, 69);
@@ -52,6 +61,15 @@ abstract public class Level : MonoBehaviour
         newPlatform.transform.localScale = new Vector3(width, height, 1);
         newPlatform.transform.position = position;
         levelPlatforms.Add(newPlatform.GetComponent<Transform>());
+
+        levelDelegate?.OnPlatformCreated(newPlatform);
+    }
+
+    protected void SpawnEnemy(GameObject enemy, Vector3 position)
+    {
+        GameObject newEnemy = Instantiate(enemy);
+        enemies.Add(newEnemy.transform);
+        newEnemy.transform.position = position;
     }
 
     protected void OnSpeedUp(float speedIncrement, bool showLevelUpImage = true)
@@ -77,6 +95,11 @@ abstract public class Level : MonoBehaviour
 
     protected void MovePlatforms()
     {
+        if (levelPlatforms.Count == 0)
+        {
+            return;
+        }
+
         foreach (Transform p in levelPlatforms)
         {
             p.Translate(-levelSpeed, 0, 0);
@@ -89,4 +112,30 @@ abstract public class Level : MonoBehaviour
             levelPlatforms.RemoveAt(0);
         }
     }
+
+    protected void MoveEnemies()
+    {
+        if (enemies.Count == 0)
+        {
+            return;
+        }
+
+        foreach (Transform e in enemies)
+        {
+            e.Translate(-levelSpeed, 0, 0);
+        }
+
+        if (enemies[0].position.x < Camera.main.transform.position.x - 80)
+        {
+            //GenerateNewPlatform(0, 0, 0, levelPlatforms[0].localScale.x, levelPlatforms[0].localScale.y);
+            Destroy(enemies[0].gameObject);
+            enemies.RemoveAt(0);
+        }
+    }
+}
+
+
+public interface LevelDelegate
+{
+    void OnPlatformCreated(GameObject platform);
 }

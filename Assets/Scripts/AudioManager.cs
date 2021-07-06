@@ -15,6 +15,7 @@ public class AudioManager : MonoBehaviour
         Brawl,
         Mouseover,
         Continue,
+        TerosBuildup,
         TerosGrowl
     }
 
@@ -40,6 +41,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip brawl;
     [SerializeField] private AudioClip mouseover;
     [SerializeField] private AudioClip announcerContinue;
+    [SerializeField] private AudioClip terosBuildup;
     [SerializeField] private AudioClip[] terosGrowls;
     [Header("Music")]
     [SerializeField] private AudioClip level1Intro;
@@ -94,6 +96,9 @@ public class AudioManager : MonoBehaviour
                 break;
             case AudioFX.Continue:
                 fx = announcerContinue;
+                break;
+            case AudioFX.TerosBuildup:
+                fx = terosBuildup;
                 break;
             case AudioFX.TerosGrowl:
                 fx = terosGrowls[Random.Range(0, terosGrowls.Length-1)];

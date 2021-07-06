@@ -57,19 +57,15 @@ public class Movement : MonoBehaviour
             }
         }
 
-        if (lrMovementDisabled)
-        {
-            return;
-        }
-
         //Debug.Log(movement);
         //rb2d.AddForce(movement * speed);
         Vector2 newVelocity = Vector2.Lerp(rb2d.velocity, new Vector2(movement.x * speed, rb2d.velocity.y), (grounded ? turnaroundSpeed : aerialSpeed));
         newVelocity.y = Mathf.Max(newVelocity.y, isFastFalling ? -fastFallingMaxSpeed : -normalFallingMaxSpeed);
-
+        //newVelocity.x = 0;
         spriteRenderer.flipX = newVelocity.x > 0;
 
         rb2d.velocity = newVelocity;
+        Debug.Log(rb2d.velocity);
     }
 
     public void Move(InputAction.CallbackContext context)

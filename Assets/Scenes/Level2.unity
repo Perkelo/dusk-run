@@ -328,7 +328,7 @@ GameObject:
   - component: {fileID: 1570125227}
   - component: {fileID: 1570125228}
   m_Layer: 0
-  m_Name: Level
+  m_Name: LevelShipwreck
   m_TagString: Level
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -366,7 +366,7 @@ MonoBehaviour:
   background: {fileID: 1347892885}
   background2: {fileID: 865096973}
   levelSpeed: 0
-  length: -1
+  length: 500
   levelMusic: 0
   platform: {fileID: 1253312014669643570, guid: 8148c2b11c04bb6478ab5dd313c34590, type: 3}
   levelGeometry: {fileID: 45553128}
@@ -376,3 +376,5 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 335ee63fceb7c0b44938a59a58c0f7cd, type: 3}
   - {fileID: 21300000, guid: eb627e5f503d8744cbcf94a38f428491, type: 3}
   - {fileID: 21300000, guid: 3ec2a5c44c5564f47832d1cc70bc8d23, type: 3}
+  terosSpawningProbability: 0.2
+  teros: {fileID: 5195415635224781170, guid: c2dedc845fde60e4ab46b78dcb17fa09, type: 3}
