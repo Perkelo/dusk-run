@@ -19,7 +19,8 @@ public class AudioManager : MonoBehaviour
 		TerosGrowl,
 		HammerImpact,
 		Jump,
-		GroundTouch
+		GroundTouch,
+		Win
 	}
 
 	public enum Music
@@ -49,6 +50,7 @@ public class AudioManager : MonoBehaviour
 	[SerializeField] private AudioClip hammerImpact;
 	[SerializeField] private AudioClip[] jumpSounds;
 	[SerializeField] private AudioClip groundTouch;
+	[SerializeField] private AudioClip[] winSounds;
 	[Header("Music")]
 	[SerializeField] private AudioClip level1Intro;
 	[SerializeField] private AudioClip level1Loop;
@@ -60,6 +62,11 @@ public class AudioManager : MonoBehaviour
 
 	private void Awake()
 	{
+		if(instance != this && instance != null)
+        {
+			Destroy(this);
+			return;
+        }
 		instance = this;
 
 		fxSources = new AudioSource[sourcesCount];
@@ -117,6 +124,9 @@ public class AudioManager : MonoBehaviour
 				break;
 			case AudioFX.GroundTouch:
 				fx = groundTouch;
+				break;
+			case AudioFX.Win:
+				fx = winSounds[Random.Range(0, winSounds.Length - 1)];
 				break;
 			default:
 				fx = brawl;

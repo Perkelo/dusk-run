@@ -48,23 +48,27 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private Level level;
 	[SerializeField] private Slider levelProgress;
 
-	private bool isEndless = false;
+	private System.Action nextDelegate = null;
 
 	void Start()
 	{
 		instance = this;
 		playerTransform = player.GetComponent<Transform>();
 
+		LoadLevel();
+	}
+
+	public void LoadLevel()
+    {
 		void completionCallback(AsyncOperation action)
 		{
-			Debug.Log(GameObject.FindGameObjectWithTag("Level").name);
+			//Debug.Log(GameObject.FindGameObjectWithTag("Level").name);
 			level = GameObject.FindGameObjectWithTag("Level").GetComponent<Level>();
 
-			if(isEndless) {
+			if ((LevelData.instance == null) || LevelData.instance.infinite)
+			{
 				level.length = -1;
-			} else {
-				isEndless = level.length > 0;
-			}
+			}	
 
 			if (AudioManager.instance == null)
 			{
@@ -79,13 +83,12 @@ public class GameManager : MonoBehaviour
 			return;
 		}
 
-		if (LevelData.instance == null) {
-			isEndless = true;
+		if (LevelData.instance == null)
+		{
 			LevelData.LoadSceneAdditive(LevelData.defaultLevel, completionCallback);
 		}
 		else
 		{
-			isEndless = false;
 			LevelData.LoadSceneAdditive(LevelData.instance.level, completionCallback);
 		}
 	}
@@ -307,7 +310,16 @@ public class GameManager : MonoBehaviour
 
 	public void OnLoreNextClicked()
 	{
-		Debug.Log("Next clicked");
+		if (nextDelegate == null)
+		{
+			Debug.Log("Next clicked without delegate");
+        }
+        else
+        {
+			nextDelegate();
+        }
+
+		loreUI.enabled = false;
 	}
 
 	public void RemoveHearts(int index)
@@ -322,4 +334,17 @@ public class GameManager : MonoBehaviour
 	{
 		OnPlayerFell();
 	}
+
+	public void DisplayLore(string title, string lore, System.Action onNext)
+    {
+		gameUI.enabled = false;
+		gameOverScreen.enabled = false;
+		healthUI.enabled = false;
+		loreUI.enabled = true;
+
+		loreTitle.text = title;
+		AnimateLoreText(lore, 0.005f, delegate { }, 0);
+
+		nextDelegate = onNext;
+    }
 }

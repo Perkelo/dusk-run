@@ -8,6 +8,7 @@ public class LevelData : MonoBehaviour
 	public static LevelScene defaultLevel = LevelScene.Level1;
 
 	public LevelScene level;
+	public bool infinite = false;
 
 	public enum LevelScene
 	{
@@ -17,7 +18,13 @@ public class LevelData : MonoBehaviour
 
 	private void Awake()
 	{
+		if (instance != this && instance != null)
+		{
+			Destroy(this);
+			return;
+		}
 		instance = this;
+		DontDestroyOnLoad(this);
 	}
 
 	private static string SceneToString(LevelScene scene)
@@ -29,4 +36,10 @@ public class LevelData : MonoBehaviour
 	{
 		SceneManager.LoadSceneAsync(SceneToString(scene), LoadSceneMode.Additive).completed += callback;
 	}
+
+	public static void UnloadScene(LevelScene scene, Action<AsyncOperation> callback)
+	{
+		SceneManager.UnloadSceneAsync(SceneToString(scene)).completed += callback;
+	}
+
 }

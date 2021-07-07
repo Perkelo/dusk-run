@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14203b1a1ad23094fbc1d386cdb064a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fxVolume: 1
+  fxVolume: 0.3
   musicVolume: 0.17
   intro: {fileID: 8300000, guid: f9376f6386355f844a5a7bec0b75ce7a, type: 3}
   five: {fileID: 8300000, guid: e9566121acd8eb74687aedbd4379ef74, type: 3}
@@ -54,10 +54,22 @@ MonoBehaviour:
   brawl: {fileID: 8300000, guid: 710ccb820c31353469331c8efc654cf7, type: 3}
   mouseover: {fileID: 8300000, guid: f6a3f0291aeb4d14790899e1cf713d4e, type: 3}
   announcerContinue: {fileID: 8300000, guid: 2c963751ed1361d42b39d4d4466cdfe4, type: 3}
+  terosBuildup: {fileID: 8300000, guid: 46017dece14f9204595238fd6e3ca031, type: 3}
   terosGrowls:
   - {fileID: 8300000, guid: c4b48c5026ca1434895d9bea6095d1ad, type: 3}
   - {fileID: 8300000, guid: 58bdffd9df5515e40ba6d76dab582e38, type: 3}
   - {fileID: 8300000, guid: ded6003973c52b44baf196e2950dd63d, type: 3}
+  hammerImpact: {fileID: 8300000, guid: 3423a93e617285c4591bb2def4e83b61, type: 3}
+  jumpSounds:
+  - {fileID: 8300000, guid: 9ba3d219cacaabe40ba87fe44c061a50, type: 3}
+  - {fileID: 8300000, guid: 088b30293f06d6d458efeffa89ed67a2, type: 3}
+  - {fileID: 8300000, guid: 04303d05b9f3cf74daf11f80093f29ce, type: 3}
+  - {fileID: 8300000, guid: f6088049992e2f94db871be9662cb509, type: 3}
+  - {fileID: 8300000, guid: 39921fd9a63e89f46834206c221f4d5d, type: 3}
+  groundTouch: {fileID: 8300000, guid: 64cb534a10df99646994186e30fd62b8, type: 3}
+  winSounds:
+  - {fileID: 8300000, guid: c42fdbaabb84ef74199f1046fa53e058, type: 3}
+  - {fileID: 8300000, guid: 3f96fd29293e0f24cb9e3c35abfa987f, type: 3}
   level1Intro: {fileID: 8300000, guid: 4fded90e41404d741b311272d8a2bf33, type: 3}
   level1Loop: {fileID: 8300000, guid: 9edd4648e86edfe4f9a2e5c56b93dc9b, type: 3}
   shipwreckIntro: {fileID: 8300000, guid: a9ff025b4937f094ba29c309246114cb, type: 3}

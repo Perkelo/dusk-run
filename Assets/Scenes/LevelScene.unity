@@ -6830,7 +6830,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e93206c61df247744a57e395a67c6e57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  level: 1
+  level: 0
+  infinite: 0
 --- !u!4 &1507328507
 Transform:
   m_ObjectHideFlags: 0
@@ -7935,50 +7936,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: fxVolume
-      value: 0.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: groundTouch
-      value: 
-      objectReference: {fileID: 8300000, guid: 64cb534a10df99646994186e30fd62b8, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: musicVolume
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: hammerImpact
-      value: 
-      objectReference: {fileID: 8300000, guid: 3423a93e617285c4591bb2def4e83b61, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: terosBuildup
-      value: 
-      objectReference: {fileID: 8300000, guid: 46017dece14f9204595238fd6e3ca031, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: jumpSounds.Array.size
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: jumpSounds.Array.data[0]
-      value: 
-      objectReference: {fileID: 8300000, guid: 9ba3d219cacaabe40ba87fe44c061a50, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: jumpSounds.Array.data[1]
-      value: 
-      objectReference: {fileID: 8300000, guid: 088b30293f06d6d458efeffa89ed67a2, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: jumpSounds.Array.data[2]
-      value: 
-      objectReference: {fileID: 8300000, guid: 04303d05b9f3cf74daf11f80093f29ce, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: jumpSounds.Array.data[3]
-      value: 
-      objectReference: {fileID: 8300000, guid: f6088049992e2f94db871be9662cb509, type: 3}
-    - target: {fileID: 1667710004705474784, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
-      propertyPath: jumpSounds.Array.data[4]
-      value: 
-      objectReference: {fileID: 8300000, guid: 39921fd9a63e89f46834206c221f4d5d, type: 3}
     - target: {fileID: 1667710004705474785, guid: 893842f8819ec9a4f91cc6b16ac0f0c8, type: 3}
       propertyPath: m_RootOrder
       value: 4

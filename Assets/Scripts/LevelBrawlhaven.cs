@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Extensions;
 
 public class LevelBrawlhaven : Level
 {
@@ -25,7 +27,19 @@ public class LevelBrawlhaven : Level
 
 	public override void OnLevelEnded()
 	{
-		throw new System.NotImplementedException();
+		GameManager.instance.paused = true;
+
+		AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Win);
+
+		this.RunAfter(0.5f, delegate
+		{
+			GameManager.instance.DisplayLore("Second Level", "This is the story for the second level ajajdafgjhk", delegate
+			{
+				LevelData.instance.level = LevelData.LevelScene.Level2;
+				GameManager.instance.LoadLevel();
+			});
+			LevelData.UnloadScene(LevelData.LevelScene.Level1, delegate { });
+		});
 	}
 
 	private void FixedUpdate()

@@ -23,12 +23,17 @@ public class MainMenuGameManager : MonoBehaviour {
 		StartCoroutine(AndKnuckles());
 	}
 
-	public void OnStartStoryMode() {
+	public void OnStartStoryMode()
+	{
+		LevelData.instance.infinite = false;
+		LevelData.instance.level = LevelData.LevelScene.Level1;
 		SceneManager.LoadScene("LevelScene", LoadSceneMode.Single);
 	}
 
 	public void OnStartInfiniteMode()
 	{
+		LevelData.instance.infinite = true;
+		LevelData.instance.level = LevelData.LevelScene.Level1;
 		SceneManager.LoadScene("LevelScene", LoadSceneMode.Single);
 	}
 
