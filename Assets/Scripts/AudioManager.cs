@@ -16,7 +16,10 @@ public class AudioManager : MonoBehaviour
         Mouseover,
         Continue,
         TerosBuildup,
-        TerosGrowl
+        TerosGrowl,
+        HammerImpact,
+        Jump,
+        GroundTouch
     }
 
     public enum Music
@@ -43,6 +46,9 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip announcerContinue;
     [SerializeField] private AudioClip terosBuildup;
     [SerializeField] private AudioClip[] terosGrowls;
+    [SerializeField] private AudioClip hammerImpact;
+    [SerializeField] private AudioClip[] jumpSounds;
+    [SerializeField] private AudioClip groundTouch;
     [Header("Music")]
     [SerializeField] private AudioClip level1Intro;
     [SerializeField] private AudioClip level1Loop;
@@ -103,6 +109,15 @@ public class AudioManager : MonoBehaviour
             case AudioFX.TerosGrowl:
                 fx = terosGrowls[Random.Range(0, terosGrowls.Length-1)];
                 break;
+            case AudioFX.HammerImpact:
+                fx = hammerImpact;
+                break;
+            case AudioFX.Jump:
+                fx = jumpSounds[Random.Range(0, jumpSounds.Length - 1)];
+                break;
+            case AudioFX.GroundTouch:
+                fx = groundTouch;
+                break;
             default:
                 fx = brawl;
                 break;
@@ -155,7 +170,7 @@ public class AudioManager : MonoBehaviour
     private IEnumerator PlayAfter(AudioClip loop, float time, float pitch)
     {
         yield return new WaitForSeconds(time);
-        musicSource.clip = loop;
+        musicSource.clip = loop;s
         musicSource.volume = musicVolume;
         musicSource.pitch = 1.5f;
         musicSource.loop = true;

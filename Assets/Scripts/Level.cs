@@ -19,6 +19,14 @@ abstract public class Level : MonoBehaviour
     [SerializeField] private float yRange = 5f;
     [SerializeField] private Sprite[] levelUpSprites;
 
+    protected bool stuck
+    {
+        get
+        {
+            return GameManager.instance.player.GetComponent<Movement>().stuck;
+        }
+    }
+
     protected LevelDelegate? levelDelegate;
 
     abstract public void OnGameOver();

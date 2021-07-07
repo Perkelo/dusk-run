@@ -53,6 +53,11 @@ public class LevelShipwreck : Level, LevelDelegate
             return;
         }
 
+        if (stuck)
+        {
+            return;
+        }
+
         MovePlatforms();
         MoveEnemies();
     }

@@ -6,6 +6,7 @@ public class EnemyTeros : MonoBehaviour
     private Rigidbody2D rb2d;
     [SerializeField] private float attackForce = 1f;
     [SerializeField] private float minimumDistance = 10f;
+    [SerializeField] private float knockbackForce = 15f;
 
     private bool shouldCheckForPlayer = true;
 
@@ -51,9 +52,17 @@ public class EnemyTeros : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.otherCollider.gameObject.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("Player"))
         {
-            collision.otherCollider.gameObject.GetComponent<PlayerHealth>().Hit();
+            if (collision.gameObject.GetComponent<PlayerHealth>().Hit())
+            {
+                collision.gameObject.GetComponent<Rigidbody2D>().AddForce((collision.gameObject.transform.position - collision.otherCollider.transform.position) * knockbackForce, ForceMode2D.Impulse);
+                AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.HammerImpact);
+            }
+        }
+        else
+        {
+            Debug.Log(collision.gameObject.name);
         }
     }
 }

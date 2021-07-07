@@ -34,6 +34,12 @@ public class LevelBrawlhaven : Level
         {
             return;
         }
+
+        if (stuck)
+        {
+            return;
+        }
+
         CheckSpeedIncrease();
         MovePlatforms();
     }

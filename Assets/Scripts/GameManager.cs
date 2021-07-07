@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text loreText;
     [SerializeField] public Image warning;
     [SerializeField] public Image levelUpImage;
+
+    [Header("Health")]
+    [SerializeField] private Canvas healthUI;
+    [SerializeField] private Image[] hearts;
+    [SerializeField] private bool healthEnabled = false;
+
     public int score = 0;
     [SerializeField] private SpriteRenderer startCounter;
     [SerializeField] private Sprite one;
@@ -87,6 +93,20 @@ public class GameManager : MonoBehaviour
     private void LevelSetup()
     {
         paused = true;
+        
+        if(healthEnabled && hearts.Length > 0)
+        {
+            player.GetComponent<PlayerHealth>().InitializeHealth(hearts.Length);
+            healthUI.enabled = true;
+            foreach (Image heart in hearts)
+            {
+                heart.enabled = true;
+            }
+        }
+        else
+        {
+            healthUI.enabled = false;
+        }
 
         scoreLabel.text = "Score: 0";
         score = 0;
@@ -126,26 +146,28 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        level.background.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
-        level.background2.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
+        if (!player.GetComponent<Movement>().stuck) {
+            level.background.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
+            level.background2.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
 
-        if (level.background.position.x < Camera.main.transform.position.x - 80)
-        {
-            level.background.transform.position = new Vector3(level.background2.transform.position.x + 100, 0, 69);
-            Transform tmp = level.background;
-            level.background = level.background2;
-            level.background2 = tmp;
-        }
-
-        score += 1;
-        scoreLabel.text = $"Score: {score/10}";
-
-        if (level.length > 0)
-        {
-            levelProgress.value = score / 10f;
-            if(score/10f >= level.length)
+            if (level.background.position.x < Camera.main.transform.position.x - 80)
             {
-                level.OnLevelEnded();
+                level.background.transform.position = new Vector3(level.background2.transform.position.x + 100, 0, 69);
+                Transform tmp = level.background;
+                level.background = level.background2;
+                level.background2 = tmp;
+            }
+
+            score += 1;
+            scoreLabel.text = $"Score: {score / 10}";
+
+            if (level.length > 0)
+            {
+                levelProgress.value = score / 10f;
+                if (score / 10f >= level.length)
+                {
+                    level.OnLevelEnded();
+                }
             }
         }
     }
@@ -286,5 +308,18 @@ public class GameManager : MonoBehaviour
     public void OnLoreNextClicked()
     {
         Debug.Log("Next clicked");
+    }
+
+    public void RemoveHearts(int index)
+    {
+        for (int i = hearts.Length - 1; i >= index; i--)
+        {
+            hearts[i].enabled = false;
+        }
+    }
+
+    public void HealthGameOver()
+    {
+        OnPlayerFell();
     }
 }

@@ -13,6 +13,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float turnaroundSpeed = 0.5f;
     [SerializeField] private float jumpForce = 1f;
     [SerializeField] private float jumpFloorDistance = 1f;
+    [SerializeField] private float stuckDistance = 1f;
     [SerializeField] private float normalFallingMaxSpeed = Mathf.Infinity;
     [SerializeField] private float fastFallingMaxSpeed = Mathf.Infinity;
     [SerializeField] private float fastFallInitialForce = 1f;
@@ -22,6 +23,7 @@ public class Movement : MonoBehaviour
     [SerializeField]  private short jumpCounter = 0;
 
     [SerializeField] private bool grounded = false;
+    [SerializeField] public bool stuck = false;
     public bool lrMovementDisabled = true;
 
     void Start()
@@ -32,12 +34,29 @@ public class Movement : MonoBehaviour
 
     private void OnGroundTouch()
     {
+        AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.GroundTouch);
         grounded = true;
         isFastFalling = false;
         jumpCounter = 0;
     }
 
     private void FixedUpdate()
+    {
+        GroundCheck();
+        StuckCheck();
+
+        //Debug.Log(movement);
+        //rb2d.AddForce(movement * speed);
+        Vector2 newVelocity = Vector2.Lerp(rb2d.velocity, new Vector2(movement.x * speed, rb2d.velocity.y), (grounded ? turnaroundSpeed : aerialSpeed));
+        newVelocity.y = Mathf.Max(newVelocity.y, isFastFalling ? -fastFallingMaxSpeed : -normalFallingMaxSpeed);
+        //newVelocity.x = 0;
+        spriteRenderer.flipX = newVelocity.x > 0;
+
+        rb2d.velocity = newVelocity;
+        //Debug.Log(rb2d.velocity);
+    }
+
+    private void GroundCheck()
     {
         List<RaycastHit2D> res = new List<RaycastHit2D>();
         if (Physics2D.Raycast(transform.position, Vector2.down, cf, res, jumpFloorDistance) > 0)
@@ -48,7 +67,11 @@ public class Movement : MonoBehaviour
                 if (r.collider.name != "Player")
                 {
                     touched = true;
-                    OnGroundTouch();
+                    if (!grounded)
+                    {
+                        OnGroundTouch();
+                    }
+                    return;
                 }
             }
             if (!touched)
@@ -56,16 +79,28 @@ public class Movement : MonoBehaviour
                 grounded = false;
             }
         }
+    }
 
-        //Debug.Log(movement);
-        //rb2d.AddForce(movement * speed);
-        Vector2 newVelocity = Vector2.Lerp(rb2d.velocity, new Vector2(movement.x * speed, rb2d.velocity.y), (grounded ? turnaroundSpeed : aerialSpeed));
-        newVelocity.y = Mathf.Max(newVelocity.y, isFastFalling ? -fastFallingMaxSpeed : -normalFallingMaxSpeed);
-        //newVelocity.x = 0;
-        spriteRenderer.flipX = newVelocity.x > 0;
-
-        rb2d.velocity = newVelocity;
-        Debug.Log(rb2d.velocity);
+    private void StuckCheck()
+    {
+        List<RaycastHit2D> res = new List<RaycastHit2D>();
+        if (Physics2D.Raycast(transform.position, Vector2.right, cf, res, stuckDistance) > 0)
+        {
+            bool touched = false;
+            foreach (RaycastHit2D r in res)
+            {
+                if (r.collider.name != "Player")
+                {
+                    touched = true;
+                    stuck = true;
+                    return;
+                }
+            }
+            if (!touched)
+            {
+                stuck = false;
+            }
+        }
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -95,6 +130,7 @@ public class Movement : MonoBehaviour
                 //rb2d.velocity = new Vector2(0, rb2d.velocity.x);
                 //rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
                 rb2d.velocity = new Vector2(rb2d.velocity.x, jumpForce);
+                AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Jump);
             }
         }
     }

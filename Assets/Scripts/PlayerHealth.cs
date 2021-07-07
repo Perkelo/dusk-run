@@ -18,11 +18,22 @@ public class PlayerHealth : MonoBehaviour
             {
                 canBeHit = true;
             });
+            GameManager.instance.RemoveHearts(health);
+            Debug.Log("Hit");
+            if (health <= 0)
+            {
+                GameManager.instance.HealthGameOver();
+            }
             return true;
         }
         else
         {
             return false;
         }
+    }
+
+    public void InitializeHealth(int health)
+    {
+        this.health = health;
     }
 }

@@ -155,3 +155,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackForce: 50
   minimumDistance: 40
+  knockbackForce: 20
