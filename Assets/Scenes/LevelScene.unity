@@ -8343,6 +8343,10 @@ PrefabInstance:
       value: -0.28499603
       objectReference: {fileID: 0}
     - target: {fileID: 7264940550708422120, guid: a7538bce46f234c4f9b73751af5b6d46, type: 3}
+      propertyPath: stuckDistance
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 7264940550708422120, guid: a7538bce46f234c4f9b73751af5b6d46, type: 3}
       propertyPath: lrMovementDisabled
       value: 1
       objectReference: {fileID: 0}

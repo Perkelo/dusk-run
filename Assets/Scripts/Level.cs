@@ -4,146 +4,146 @@ using UnityEngine;
 
 abstract public class Level : MonoBehaviour
 {
-    public Transform background;
-    public Transform background2;
-    public float levelSpeed;
-    public int length;
-    public AudioManager.Music levelMusic;
-    
-    [SerializeField] private GameObject platform;
-    [SerializeField] private Transform levelGeometry;
-    private readonly List<Transform> levelPlatforms = new List<Transform>();
-    private readonly List<Transform> enemies = new List<Transform>();
+	public Transform background;
+	public Transform background2;
+	public float levelSpeed;
+	public int length;
+	public AudioManager.Music levelMusic;
+	
+	[SerializeField] private GameObject platform;
+	[SerializeField] private Transform levelGeometry;
+	private readonly List<Transform> levelPlatforms = new List<Transform>();
+	private readonly List<Transform> enemies = new List<Transform>();
 
-    [SerializeField] public float initialLevelSpeed = 1.0f;
-    [SerializeField] private float yRange = 5f;
-    [SerializeField] private Sprite[] levelUpSprites;
+	[SerializeField] public float initialLevelSpeed = 1.0f;
+	[SerializeField] private float yRange = 5f;
+	[SerializeField] private Sprite[] levelUpSprites;
 
-    protected bool stuck
-    {
-        get
-        {
-            return GameManager.instance.player.GetComponent<Movement>().stuck;
-        }
-    }
+	protected bool stuck
+	{
+		get
+		{
+			return GameManager.instance.player.GetComponent<Movement>().stuck;
+		}
+	}
 
-    protected LevelDelegate? levelDelegate;
+	protected LevelDelegate? levelDelegate;
 
-    abstract public void OnGameOver();
+	abstract public void OnGameOver();
 
-    abstract public void OnLevelEnded();
+	abstract public void OnLevelEnded();
 
-    public virtual void LevelSetup()
-    {
-        levelSpeed = initialLevelSpeed;
+	public virtual void LevelSetup()
+	{
+		levelSpeed = initialLevelSpeed;
 
-        foreach (Transform p in levelPlatforms)
-        {
-            Destroy(p.gameObject);
-        }
+		foreach (Transform p in levelPlatforms)
+		{
+			Destroy(p.gameObject);
+		}
 
-        foreach (Transform e in enemies)
-        {
-            Destroy(e.gameObject);
-        }
+		foreach (Transform e in enemies)
+		{
+			Destroy(e.gameObject);
+		}
 
-        levelPlatforms.Clear();
-        enemies.Clear();
+		levelPlatforms.Clear();
+		enemies.Clear();
 
-        background.position = new Vector3(0, 0, 69);
-        background2.position = new Vector3(100, 0, 69);
-    }
+		background.position = new Vector3(0, 0, 69);
+		background2.position = new Vector3(100, 0, 69);
+	}
 
-    protected void GenerateNewPlatform(float x = 0, float y = 0, float z = 0, float width = 1f, float height = 1f)
-    {
-        GameObject newPlatform = Instantiate(platform, levelGeometry);
-        Vector3 position;
-        if (x != 0 || y != 0 || z != 0)
-        {
-            position = new Vector3(x, y, z);
-        }
-        else
-        {
-            position = new Vector3(levelPlatforms[levelPlatforms.Count - 1].position.x + 20 + GameManager.instance.score / 500, Random.Range(-yRange, yRange), levelPlatforms[levelPlatforms.Count - 1].position.z);
-        }
-        newPlatform.transform.localScale = new Vector3(width, height, 1);
-        newPlatform.transform.position = position;
-        levelPlatforms.Add(newPlatform.GetComponent<Transform>());
+	protected void GenerateNewPlatform(float x = 0, float y = 0, float z = 0, float width = 1f, float height = 1f)
+	{
+		GameObject newPlatform = Instantiate(platform, levelGeometry);
+		Vector3 position;
+		if (x != 0 || y != 0 || z != 0)
+		{
+			position = new Vector3(x, y, z);
+		}
+		else
+		{
+			position = new Vector3(levelPlatforms[levelPlatforms.Count - 1].position.x + 20 + GameManager.instance.score / 500, Random.Range(-yRange, yRange), levelPlatforms[levelPlatforms.Count - 1].position.z);
+		}
+		newPlatform.transform.localScale = new Vector3(width, height, 1);
+		newPlatform.transform.position = position;
+		levelPlatforms.Add(newPlatform.GetComponent<Transform>());
 
-        levelDelegate?.OnPlatformCreated(newPlatform);
-    }
+		levelDelegate?.OnPlatformCreated(newPlatform);
+	}
 
-    protected void SpawnEnemy(GameObject enemy, Vector3 position)
-    {
-        GameObject newEnemy = Instantiate(enemy);
-        enemies.Add(newEnemy.transform);
-        newEnemy.transform.position = position;
-    }
+	protected void SpawnEnemy(GameObject enemy, Vector3 position)
+	{
+		GameObject newEnemy = Instantiate(enemy);
+		enemies.Add(newEnemy.transform);
+		newEnemy.transform.position = position;
+	}
 
-    protected void OnSpeedUp(float speedIncrement, bool showLevelUpImage = true)
-    {
-        levelSpeed += speedIncrement;
-        AudioManager.instance.IncreaseMusicSpeed(speedIncrement);
+	protected void OnSpeedUp(float speedIncrement, bool showLevelUpImage = true)
+	{
+		levelSpeed += speedIncrement;
+		AudioManager.instance.IncreaseMusicSpeed(speedIncrement);
 
-        if (showLevelUpImage)
-        {
-            //TODO: Move to GameManager
-            GameManager.instance.levelUpImage.enabled = true;
-            GameManager.instance.levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
-            StartCoroutine(HideLevelUpImage(1));
-        }
-    }
+		if (showLevelUpImage)
+		{
+			//TODO: Move to GameManager
+			GameManager.instance.levelUpImage.enabled = true;
+			GameManager.instance.levelUpImage.sprite = levelUpSprites[Random.Range(0, levelUpSprites.Length - 1)];
+			StartCoroutine(HideLevelUpImage(1));
+		}
+	}
 
-    //TODO: Move to GameManager
-    private IEnumerator HideLevelUpImage(float after)
-    {
-        yield return new WaitForSeconds(after);
-        GameManager.instance.levelUpImage.enabled = false;
-    }
+	//TODO: Move to GameManager
+	private IEnumerator HideLevelUpImage(float after)
+	{
+		yield return new WaitForSeconds(after);
+		GameManager.instance.levelUpImage.enabled = false;
+	}
 
-    protected void MovePlatforms()
-    {
-        if (levelPlatforms.Count == 0)
-        {
-            return;
-        }
+	protected void MovePlatforms()
+	{
+		if (levelPlatforms.Count == 0)
+		{
+			return;
+		}
 
-        foreach (Transform p in levelPlatforms)
-        {
-            p.Translate(-levelSpeed, 0, 0);
-        }
+		foreach (Transform p in levelPlatforms)
+		{
+			p.Translate(-levelSpeed, 0, 0);
+		}
 
-        if (levelPlatforms[0].position.x < Camera.main.transform.position.x - 80)
-        {
-            GenerateNewPlatform(0, 0, 0, levelPlatforms[0].localScale.x, levelPlatforms[0].localScale.y);
-            Destroy(levelPlatforms[0].gameObject);
-            levelPlatforms.RemoveAt(0);
-        }
-    }
+		if (levelPlatforms[0].position.x < Camera.main.transform.position.x - 80)
+		{
+			GenerateNewPlatform(0, 0, 0, levelPlatforms[0].localScale.x, levelPlatforms[0].localScale.y);
+			Destroy(levelPlatforms[0].gameObject);
+			levelPlatforms.RemoveAt(0);
+		}
+	}
 
-    protected void MoveEnemies()
-    {
-        if (enemies.Count == 0)
-        {
-            return;
-        }
+	protected void MoveEnemies()
+	{
+		if (enemies.Count == 0)
+		{
+			return;
+		}
 
-        foreach (Transform e in enemies)
-        {
-            e.Translate(-levelSpeed, 0, 0);
-        }
+		foreach (Transform e in enemies)
+		{
+			e.Translate(-levelSpeed, 0, 0);
+		}
 
-        if (enemies[0].position.x < Camera.main.transform.position.x - 80)
-        {
-            //GenerateNewPlatform(0, 0, 0, levelPlatforms[0].localScale.x, levelPlatforms[0].localScale.y);
-            Destroy(enemies[0].gameObject);
-            enemies.RemoveAt(0);
-        }
-    }
+		if (enemies[0].position.x < Camera.main.transform.position.x - 80)
+		{
+			//GenerateNewPlatform(0, 0, 0, levelPlatforms[0].localScale.x, levelPlatforms[0].localScale.y);
+			Destroy(enemies[0].gameObject);
+			enemies.RemoveAt(0);
+		}
+	}
 }
 
 
 public interface LevelDelegate
 {
-    void OnPlatformCreated(GameObject platform);
+	void OnPlatformCreated(GameObject platform);
 }

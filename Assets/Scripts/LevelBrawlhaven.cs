@@ -6,59 +6,59 @@ using UnityEngine.UI;
 public class LevelBrawlhaven : Level
 {
 
-    public override void LevelSetup()
-    {
-        base.LevelSetup();
-        GenerateNewPlatform(0, -4, 0, 0.7f, 0.7f);
-        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
-        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
-        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
-        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
-        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
-        GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
-    }
+	public override void LevelSetup()
+	{
+		base.LevelSetup();
+		GenerateNewPlatform(0, -4, 0, 0.7f, 0.7f);
+		GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+		GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+		GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+		GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+		GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+		GenerateNewPlatform(0, 0, 0, 0.7f, 0.7f);
+	}
 
-    public override void OnGameOver()
-    {
-        GameManager.instance.warning.enabled = false;
-    }
+	public override void OnGameOver()
+	{
+		GameManager.instance.warning.enabled = false;
+	}
 
-    public override void OnLevelEnded()
-    {
-        throw new System.NotImplementedException();
-    }
+	public override void OnLevelEnded()
+	{
+		throw new System.NotImplementedException();
+	}
 
-    private void FixedUpdate()
-    {
-        if (GameManager.instance.paused)
-        {
-            return;
-        }
+	private void FixedUpdate()
+	{
+		if (GameManager.instance.paused)
+		{
+			return;
+		}
 
-        if (stuck)
-        {
-            return;
-        }
+		if (stuck)
+		{
+			return;
+		}
 
-        CheckSpeedIncrease();
-        MovePlatforms();
-    }
+		CheckSpeedIncrease();
+		MovePlatforms();
+	}
 
-    private void CheckSpeedIncrease()
-    {
-        int scoremod = GameManager.instance.score % 1000;
+	private void CheckSpeedIncrease()
+	{
+		int scoremod = GameManager.instance.score % 1000;
 
-        if (scoremod == 0 && GameManager.instance.score != 0)
-        {
-            OnSpeedUp(0.2f);
-        }
-        else if (scoremod == 850 || scoremod == 900 || scoremod == 950)
-        {
-            GameManager.instance.warning.enabled = true;
-        }
-        else if (scoremod == 875 || scoremod == 925 || scoremod == 975)
-        {
-            GameManager.instance.warning.enabled = false;
-        }
-    }
+		if (scoremod == 0 && GameManager.instance.score != 0)
+		{
+			OnSpeedUp(0.2f);
+		}
+		else if (scoremod == 850 || scoremod == 900 || scoremod == 950)
+		{
+			GameManager.instance.warning.enabled = true;
+		}
+		else if (scoremod == 875 || scoremod == 925 || scoremod == 975)
+		{
+			GameManager.instance.warning.enabled = false;
+		}
+	}
 }

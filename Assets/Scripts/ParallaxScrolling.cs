@@ -5,17 +5,17 @@ using UnityEngine;
 public class ParallaxScrolling : MonoBehaviour
 {
 
-    private float initialZ;
-    [SerializeField] private float pFactorY = 1.0f;
+	private float initialZ;
+	[SerializeField] private float pFactorY = 1.0f;
 
-    void Start()
-    {
-        initialZ = transform.position.z;
-    }
+	void Start()
+	{
+		initialZ = transform.position.z;
+	}
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.position = new Vector3(transform.position.x, (Camera.main.transform.position.y) * pFactorY, initialZ);
-    }
+	// Update is called once per frame
+	void Update()
+	{
+		transform.position = new Vector3(transform.position.x, (Camera.main.transform.position.y) * pFactorY, initialZ);
+	}
 }
