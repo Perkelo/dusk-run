@@ -118,6 +118,7 @@ MonoBehaviour:
   turnaroundSpeed: 0.12
   jumpForce: 25
   jumpFloorDistance: 1.6
+  stuckDistance: 1
   normalFallingMaxSpeed: 15
   fastFallingMaxSpeed: 30
   fastFallInitialForce: 15
@@ -125,7 +126,8 @@ MonoBehaviour:
   maxJumps: 3
   jumpCounter: 0
   grounded: 0
-  lrMovementDisabled: 1
+  stuck: 0
+  lrMovementDisabled: 0
 --- !u!114 &7264940550708422117
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -60,7 +60,7 @@ public class LevelBrawlhaven : Level
 
 	private void CheckSpeedIncrease()
 	{
-		int scoremod = GameManager.instance.score % 1000;
+		int scoremod = (int) GameManager.instance.score % 1000;
 
 		if (scoremod == 0 && GameManager.instance.score != 0)
 		{

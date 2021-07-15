@@ -7,6 +7,8 @@ public class LevelShipwreck : Level, LevelDelegate
 	[SerializeField] [Range(0, 1)] private float terosSpawningProbability = 0.2f;
 	[SerializeField] private GameObject teros;
 
+	[SerializeField] private GameObject cannonball;
+
 	public override void LevelSetup()
 	{
 		levelDelegate = null;
@@ -38,11 +40,13 @@ public class LevelShipwreck : Level, LevelDelegate
 		if (Extensions.Extensions.RandomBool(terosSpawningProbability))
 		{
 			Vector3 extents = platform.GetComponent<SpriteRenderer>().bounds.extents;
-			Debug.Log(extents);
+			//Debug.Log(extents);
 			SpawnEnemy(teros, new Vector3(
 				platform.transform.position.x + Random.Range(-extents.x, extents.x),
 				platform.transform.position.y + extents.y + 1,
 				0));
+		} else {
+			//SpawnCannonball(cannonball);
 		}
 	}
 
@@ -60,5 +64,6 @@ public class LevelShipwreck : Level, LevelDelegate
 
 		MovePlatforms();
 		MoveEnemies();
+		MoveCannonballs();
 	}
 }

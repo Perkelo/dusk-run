@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager: MonoBehaviour {
 	public static GameManager instance;
 
 	public GameObject player;
@@ -13,7 +12,19 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private CameraFollow cameraFollow;
 
 	[SerializeField] public float parallaxMultiplier = 1.0f;
-	public bool paused = true;
+	[SerializeField] private float minBackgroundScroll = 0.1f;
+
+	private bool _paused = true;
+	public bool paused {
+		get {
+			return _paused;
+		}
+
+		set{
+			player.GetComponent<Movement>().movementDisabled = value;
+			_paused = value;
+		}
+	}
 
 	[Header("UI")]
 	[SerializeField] private Canvas gameUI;
@@ -32,7 +43,8 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private Image[] hearts;
 	[SerializeField] private bool healthEnabled = false;
 
-	public int score = 0;
+	public float score = 0;
+	[HideInInspector] public float currentPlayerSpeedMultiplier = 1f;
 	[SerializeField] private SpriteRenderer startCounter;
 	[SerializeField] private Sprite one;
 	[SerializeField] private Sprite two;
@@ -45,7 +57,7 @@ public class GameManager : MonoBehaviour
 
 	private readonly string bestStory = "nai has got kidnapped\nmafia\nidk\n;-;";
 
-	[SerializeField] private Level level;
+	[SerializeField] public Level level;
 	[SerializeField] private Slider levelProgress;
 
 	private System.Action nextDelegate = null;
@@ -60,6 +72,7 @@ public class GameManager : MonoBehaviour
 
 	public void LoadLevel()
     {
+		warning.enabled = false;
 		void completionCallback(AsyncOperation action)
 		{
 			//Debug.Log(GameObject.FindGameObjectWithTag("Level").name);
@@ -150,8 +163,9 @@ public class GameManager : MonoBehaviour
 		}
 
 		if (!player.GetComponent<Movement>().stuck) {
-			level.background.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
-			level.background2.Translate(-level.levelSpeed * parallaxMultiplier, 0, 0);
+			//TODO: Fix scrolling when you're going backwards
+			level.background.Translate(Mathf.Min(-level.levelSpeed * currentPlayerSpeedMultiplier * parallaxMultiplier, -minBackgroundScroll), 0, 0);
+			level.background2.Translate(Mathf.Min(-level.levelSpeed * currentPlayerSpeedMultiplier * parallaxMultiplier, -minBackgroundScroll), 0, 0);
 
 			if (level.background.position.x < Camera.main.transform.position.x - 80)
 			{
@@ -161,8 +175,8 @@ public class GameManager : MonoBehaviour
 				level.background2 = tmp;
 			}
 
-			score += 1;
-			scoreLabel.text = $"Score: {score / 10}";
+			score += 1 * currentPlayerSpeedMultiplier;
+			scoreLabel.text = $"Score: {(int) score / 10}";
 
 			if (level.length > 0)
 			{
@@ -182,14 +196,14 @@ public class GameManager : MonoBehaviour
 		gameUI.enabled = false;
 		gameOverScreen.enabled = true;
 		levelProgress.gameObject.SetActive(false);
-		gameOverScoreLabel.text = $"Score: {score / 10}";
+		gameOverScoreLabel.text = $"Score: {(int) score / 10}";
 		AudioManager.instance.PlayDeathSound();
 
 		level.OnGameOver();
 
 		if (!PlayerPrefs.HasKey("HighScore"))
 		{
-			PlayerPrefs.SetInt("HighScore", score / 10);
+			PlayerPrefs.SetInt("HighScore", (int) score / 10);
 			PlayerPrefs.Save();
 			gameOverHighScoreLabel.enabled = false;
 		}
@@ -198,7 +212,7 @@ public class GameManager : MonoBehaviour
 			int highScore = PlayerPrefs.GetInt("HighScore");
 			if(score / 10 > highScore)
 			{
-				highScore = score / 10;
+				highScore = (int) score / 10;
 				PlayerPrefs.SetInt("HighScore", highScore);
 				PlayerPrefs.Save();
 			}

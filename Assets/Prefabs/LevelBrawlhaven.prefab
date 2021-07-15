@@ -276,8 +276,8 @@ MonoBehaviour:
   platform: {fileID: 6326005664827494668, guid: 3c0f86610183f124986cad65b1beada0, type: 3}
   levelGeometry: {fileID: 1157577092062664760}
   initialLevelSpeed: 0.5
+  yRange: 5
   levelUpSprites:
   - {fileID: 21300000, guid: eb627e5f503d8744cbcf94a38f428491, type: 3}
   - {fileID: 21300000, guid: 335ee63fceb7c0b44938a59a58c0f7cd, type: 3}
   - {fileID: 21300000, guid: 3ec2a5c44c5564f47832d1cc70bc8d23, type: 3}
-  yRange: 5

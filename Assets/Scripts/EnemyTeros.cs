@@ -62,7 +62,7 @@ public class EnemyTeros : MonoBehaviour
 		}
 		else
 		{
-			Debug.Log(collision.gameObject.name);
+			//Debug.Log(collision.gameObject.name);
 		}
 	}
 }

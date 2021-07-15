@@ -25,6 +25,7 @@ public class Movement : MonoBehaviour
 	[SerializeField] private bool grounded = false;
 	[SerializeField] public bool stuck = false;
 	public bool lrMovementDisabled = true;
+	public bool movementDisabled = false;
 
 	void Start()
 	{
@@ -42,6 +43,9 @@ public class Movement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
+		if(movementDisabled){
+			return;
+		}
 		GroundCheck();
 		StuckCheck();
 
@@ -118,6 +122,7 @@ public class Movement : MonoBehaviour
 		{
 			movement = Vector2.zero;
 		}
+		GameManager.instance.currentPlayerSpeedMultiplier = 1 + (movement.x / 2f);
 	}
 
 	public void Jump(InputAction.CallbackContext context)
@@ -156,5 +161,9 @@ public class Movement : MonoBehaviour
 	public void Quit(InputAction.CallbackContext context)
 	{
 		Application.Quit();
+	}
+
+	public void SetSpeed(float levelSpeed) {
+		this.speed = levelSpeed * 20;
 	}
 }

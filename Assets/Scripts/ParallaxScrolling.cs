@@ -14,7 +14,7 @@ public class ParallaxScrolling : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
 	{
 		transform.position = new Vector3(transform.position.x, (Camera.main.transform.position.y) * pFactorY, initialZ);
 	}

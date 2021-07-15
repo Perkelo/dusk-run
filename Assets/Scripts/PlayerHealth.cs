@@ -19,7 +19,7 @@ public class PlayerHealth : MonoBehaviour
 				canBeHit = true;
 			});
 			GameManager.instance.RemoveHearts(health);
-			Debug.Log("Hit");
+			//Debug.Log("Hit");
 			if (health <= 0)
 			{
 				GameManager.instance.HealthGameOver();
