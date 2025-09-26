@@ -51,12 +51,12 @@ public class Movement : MonoBehaviour
 
 		//Debug.Log(movement);
 		//rb2d.AddForce(movement * speed);
-		Vector2 newVelocity = Vector2.Lerp(rb2d.velocity, new Vector2(movement.x * speed, rb2d.velocity.y), (grounded ? turnaroundSpeed : aerialSpeed));
+		Vector2 newVelocity = Vector2.Lerp(rb2d.linearVelocity, new Vector2(movement.x * speed, rb2d.linearVelocity.y), (grounded ? turnaroundSpeed : aerialSpeed));
 		newVelocity.y = Mathf.Max(newVelocity.y, isFastFalling ? -fastFallingMaxSpeed : -normalFallingMaxSpeed);
 		//newVelocity.x = 0;
 		spriteRenderer.flipX = newVelocity.x > 0;
 
-		rb2d.velocity = newVelocity;
+		rb2d.linearVelocity = newVelocity;
 		//Debug.Log(rb2d.velocity);
 	}
 
@@ -134,7 +134,7 @@ public class Movement : MonoBehaviour
 				jumpCounter++;
 				//rb2d.velocity = new Vector2(0, rb2d.velocity.x);
 				//rb2d.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-				rb2d.velocity = new Vector2(rb2d.velocity.x, jumpForce);
+				rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, jumpForce);
 				AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Jump);
 			}
 		}
@@ -147,9 +147,9 @@ public class Movement : MonoBehaviour
 			if (!grounded)
 			{
 				isFastFalling = true;
-				Vector2 newVelocity = rb2d.velocity;
+				Vector2 newVelocity = rb2d.linearVelocity;
 				newVelocity.y = /*Mathf.Max(newVelocity.y, 0)*/ - fastFallInitialForce;
-				rb2d.velocity = newVelocity;
+				rb2d.linearVelocity = newVelocity;
 			}
 		}
 		else if (context.canceled)

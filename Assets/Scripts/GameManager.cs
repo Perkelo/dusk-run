@@ -128,7 +128,7 @@ public class GameManager: MonoBehaviour {
 		score = 0;
 
 		playerTransform.position = new Vector3(0, 0, 0);
-		player.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+		player.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
 
 		gameOverScreen.enabled = false;
 		gameUI.enabled = true;

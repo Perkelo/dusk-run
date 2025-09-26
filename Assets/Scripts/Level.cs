@@ -168,7 +168,7 @@ abstract public class Level : MonoBehaviour
 	protected void SpawnCannonball(GameObject cannonball) {
 		GameObject newCannonball = Instantiate(cannonball);
 		newCannonball.transform.position = new Vector2(GameManager.instance.player.transform.position.x + 25, 30);
-		newCannonball.GetComponent<Rigidbody2D>().velocity = Vector2.down * 20;
+		newCannonball.GetComponent<Rigidbody2D>().linearVelocity = Vector2.down * 20;
 		newCannonball.GetComponent<Cannonball>().relativeSpeedMultiplier = Random.Range(0.7f, 0.9f);
 		cannonballs.Add(newCannonball.transform);
 	}
