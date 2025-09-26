@@ -33,7 +33,7 @@ public class LevelBrawlhaven : Level
 
 		this.RunAfter(0.5f, delegate
 		{
-			GameManager.instance.DisplayLore("Second Level", "This is the story for the second level ajajdafgjhk", delegate
+			GameManager.instance.DisplayLore("Second Level", "This is the story for the second level.", delegate
 			{
 				LevelData.instance.level = LevelData.LevelScene.Level2;
 				GameManager.instance.LoadLevel();
@@ -60,7 +60,7 @@ public class LevelBrawlhaven : Level
 
 	private void CheckSpeedIncrease()
 	{
-		int scoremod = (int) GameManager.instance.score % 1000;
+		int scoremod = (int)GameManager.instance.score % 1000;
 
 		if (scoremod == 0 && GameManager.instance.score != 0)
 		{

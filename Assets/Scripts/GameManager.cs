@@ -3,7 +3,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameManager: MonoBehaviour {
+public class GameManager : MonoBehaviour
+{
 	public static GameManager instance;
 
 	public GameObject player;
@@ -15,12 +16,15 @@ public class GameManager: MonoBehaviour {
 	[SerializeField] private float minBackgroundScroll = 0.1f;
 
 	private bool _paused = true;
-	public bool paused {
-		get {
+	public bool paused
+	{
+		get
+		{
 			return _paused;
 		}
 
-		set{
+		set
+		{
 			player.GetComponent<Movement>().movementDisabled = value;
 			_paused = value;
 		}
@@ -53,10 +57,6 @@ public class GameManager: MonoBehaviour {
 	[SerializeField] private Sprite five;
 	[SerializeField] private Sprite brawl;
 
-	private readonly string loreIpsum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam lacinia aliquet ipsum ut gravida. In ultrices hendrerit est, consequat bibendum lectus hendrerit at. Cras laoreet velit eget posuere egestas. Praesent convallis ultrices mi, eu tempor felis dictum non. Pellentesque sed risus ante. Donec tristique a turpis ut volutpat. Nunc cursus purus vel luctus congue. Nulla sit amet accumsan lectus. Aliquam erat volutpat. Quisque eros leo, eleifend et elit et, varius tempus turpis.";
-
-	private readonly string bestStory = "nai has got kidnapped\nmafia\nidk\n;-;";
-
 	[SerializeField] public Level level;
 	[SerializeField] private Slider levelProgress;
 
@@ -71,7 +71,7 @@ public class GameManager: MonoBehaviour {
 	}
 
 	public void LoadLevel()
-    {
+	{
 		warning.enabled = false;
 		void completionCallback(AsyncOperation action)
 		{
@@ -81,7 +81,7 @@ public class GameManager: MonoBehaviour {
 			if ((LevelData.instance == null) || LevelData.instance.infinite)
 			{
 				level.length = -1;
-			}	
+			}
 
 			if (AudioManager.instance == null)
 			{
@@ -89,10 +89,6 @@ public class GameManager: MonoBehaviour {
 			}
 			AudioManager.instance.PlayMusic(level.levelMusic, level is LevelBrawlhaven ? 1.5f : 1.0f);
 			LevelSetup();
-			return;
-			loreUI.enabled = true;
-			loreTitle.text = "Best story ever (by tyler \"dexsan\" blevins";
-			AnimateLoreText(bestStory, 0.005f, delegate { Debug.Log("text finished displaying"); }, 0);
 			return;
 		}
 
@@ -109,8 +105,8 @@ public class GameManager: MonoBehaviour {
 	private void LevelSetup()
 	{
 		paused = true;
-		
-		if(healthEnabled && hearts.Length > 0)
+
+		if (healthEnabled && hearts.Length > 0)
 		{
 			player.GetComponent<PlayerHealth>().InitializeHealth(hearts.Length);
 			healthUI.enabled = true;
@@ -135,7 +131,7 @@ public class GameManager: MonoBehaviour {
 
 		level.LevelSetup();
 
-		if(level.length > 0) //If length <= 0, it's an endless level
+		if (level.length > 0) //If length <= 0, it's an endless level
 		{
 			levelProgress.gameObject.SetActive(true);
 			levelProgress.maxValue = level.length;
@@ -156,13 +152,14 @@ public class GameManager: MonoBehaviour {
 			return;
 		}
 
-		if(playerTransform.position.y < killFloor)
+		if (playerTransform.position.y < killFloor)
 		{
 			OnPlayerFell();
 			return;
 		}
 
-		if (!player.GetComponent<Movement>().stuck) {
+		if (!player.GetComponent<Movement>().stuck)
+		{
 			//TODO: Fix scrolling when you're going backwards
 			level.background.Translate(Mathf.Min(-level.levelSpeed * currentPlayerSpeedMultiplier * parallaxMultiplier, -minBackgroundScroll), 0, 0);
 			level.background2.Translate(Mathf.Min(-level.levelSpeed * currentPlayerSpeedMultiplier * parallaxMultiplier, -minBackgroundScroll), 0, 0);
@@ -176,7 +173,7 @@ public class GameManager: MonoBehaviour {
 			}
 
 			score += 1 * currentPlayerSpeedMultiplier;
-			scoreLabel.text = $"Score: {(int) score / 10}";
+			scoreLabel.text = $"Score: {(int)score / 10}";
 
 			if (level.length > 0)
 			{
@@ -196,23 +193,23 @@ public class GameManager: MonoBehaviour {
 		gameUI.enabled = false;
 		gameOverScreen.enabled = true;
 		levelProgress.gameObject.SetActive(false);
-		gameOverScoreLabel.text = $"Score: {(int) score / 10}";
+		gameOverScoreLabel.text = $"Score: {(int)score / 10}";
 		AudioManager.instance.PlayDeathSound();
 
 		level.OnGameOver();
 
 		if (!PlayerPrefs.HasKey("HighScore"))
 		{
-			PlayerPrefs.SetInt("HighScore", (int) score / 10);
+			PlayerPrefs.SetInt("HighScore", (int)score / 10);
 			PlayerPrefs.Save();
 			gameOverHighScoreLabel.enabled = false;
 		}
 		else
 		{
 			int highScore = PlayerPrefs.GetInt("HighScore");
-			if(score / 10 > highScore)
+			if (score / 10 > highScore)
 			{
-				highScore = (int) score / 10;
+				highScore = (int)score / 10;
 				PlayerPrefs.SetInt("HighScore", highScore);
 				PlayerPrefs.Save();
 			}
@@ -228,7 +225,7 @@ public class GameManager: MonoBehaviour {
 
 		if (Random.Range(1, 10) <= 7) // expected value = 0.2 (chance of wrong countdown happening)
 		{
-			for(short i = 3; i >= 1; i--)
+			for (short i = 3; i >= 1; i--)
 			{
 				CounterNumber(i);
 				yield return new WaitForSeconds(1);
@@ -236,11 +233,11 @@ public class GameManager: MonoBehaviour {
 		}
 		else
 		{
-			short times = (short) Random.Range(2, 6);
+			short times = (short)Random.Range(2, 6);
 			//while(Random.Range(1, 10) <= 8) // expected value = 5 (number of numbers displayed)
-			for(short i = 0; i < times; i++)
+			for (short i = 0; i < times; i++)
 			{
-				CounterNumber((short) Random.Range(1, 5));
+				CounterNumber((short)Random.Range(1, 5));
 				yield return new WaitForSeconds(1);
 			}
 		}
@@ -288,7 +285,15 @@ public class GameManager: MonoBehaviour {
 
 	public void OnQuitClicked()
 	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WEBGL
+		// If running in WebGL, redirect to main menu scene instead of quitting the application
+		AudioManager.instance.StopMusic();
+		SceneManager.LoadScene("MainMenu");
+#else
 		Application.Quit();
+#endif
 	}
 
 	public void OnRetryClicked()
@@ -312,7 +317,7 @@ public class GameManager: MonoBehaviour {
 	private IEnumerator AnimateLoreTextAux(string text, float interval, System.Action callback, float delayAfterEnd)
 	{
 		int counter = 0;
-		while(counter <= text.Length)
+		while (counter <= text.Length)
 		{
 			yield return new WaitForSeconds(interval);
 			loreText.text = text.Substring(0, counter);
@@ -327,11 +332,11 @@ public class GameManager: MonoBehaviour {
 		if (nextDelegate == null)
 		{
 			Debug.Log("Next clicked without delegate");
-        }
-        else
-        {
+		}
+		else
+		{
 			nextDelegate();
-        }
+		}
 
 		loreUI.enabled = false;
 	}
@@ -350,15 +355,15 @@ public class GameManager: MonoBehaviour {
 	}
 
 	public void DisplayLore(string title, string lore, System.Action onNext)
-    {
+	{
 		gameUI.enabled = false;
 		gameOverScreen.enabled = false;
 		healthUI.enabled = false;
 		loreUI.enabled = true;
 
 		loreTitle.text = title;
-		AnimateLoreText(lore, 0.005f, delegate { }, 0);
+		AnimateLoreText(lore, 0.05f, delegate { }, 0);
 
 		nextDelegate = onNext;
-    }
+	}
 }

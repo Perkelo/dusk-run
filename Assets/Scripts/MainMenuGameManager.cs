@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MainMenuGameManager : MonoBehaviour {
+public class MainMenuGameManager : MonoBehaviour
+{
 
 	[SerializeField] private Image storyButtonOutline;
 	[SerializeField] private Image brawlButtonOutline;
@@ -39,42 +40,43 @@ public class MainMenuGameManager : MonoBehaviour {
 
 	public void OnQuitGame()
 	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#endif
 		Application.Quit();
 	}
-	public void OnMouseEnteredStoryModeButton() {
-		//Debug.Log("Mouse entered");
+	public void OnMouseEnteredStoryModeButton()
+	{
 		storyButtonOutline.enabled = true;
 		mouseover = StartCoroutine(SpamMouseOver());
 	}
 
-	public void OnMouseExitedStoryModeButton() {
-		//Debug.Log("Mouse Exited");
+	public void OnMouseExitedStoryModeButton()
+	{
 		storyButtonOutline.enabled = false;
 		StopCoroutine(mouseover);
 	}
 
-	public void OnMouseEnteredBrawlButton() {
-		//Debug.Log("Mouse entered");
+	public void OnMouseEnteredBrawlButton()
+	{
 		brawlButtonOutline.enabled = true;
 		mouseover = StartCoroutine(SpamMouseOver());
 	}
 
-	public void OnMouseExitedBrawlButton() {
-		//Debug.Log("Mouse Exited");
+	public void OnMouseExitedBrawlButton()
+	{
 		brawlButtonOutline.enabled = false;
 		StopCoroutine(mouseover);
 	}
 
 	public void OnMouseEnteredQuitButton()
 	{
-		Debug.Log("Mouse entered");
 		quitButtonOutline.enabled = true;
 		mouseover = StartCoroutine(SpamMouseOver());
 	}
 
 	public void OnMouseExitedQuitButton()
 	{
-		Debug.Log("Mouse Exited");
 		quitButtonOutline.enabled = false;
 		StopCoroutine(mouseover);
 	}

@@ -62,11 +62,11 @@ public class AudioManager : MonoBehaviour
 
 	private void Awake()
 	{
-		if(instance != this && instance != null)
-        {
+		if (instance != this && instance != null)
+		{
 			Destroy(this);
 			return;
-        }
+		}
 		instance = this;
 
 		fxSources = new AudioSource[sourcesCount];
@@ -114,7 +114,7 @@ public class AudioManager : MonoBehaviour
 				fx = terosBuildup;
 				break;
 			case AudioFX.TerosGrowl:
-				fx = terosGrowls[Random.Range(0, terosGrowls.Length-1)];
+				fx = terosGrowls[Random.Range(0, terosGrowls.Length - 1)];
 				break;
 			case AudioFX.HammerImpact:
 				fx = hammerImpact;
@@ -133,12 +133,14 @@ public class AudioManager : MonoBehaviour
 				break;
 		}
 
-		short iter = (short) fxSources.Length; //Can cast without problems because the length is bound by sourcesCount
-		while(fxSources[counter].isPlaying && iter >= 0) {
+		short iter = (short)fxSources.Length; //Can cast without problems because the length is bound by sourcesCount
+		while (fxSources[counter].isPlaying && iter >= 0)
+		{
 			counter = (short)((counter + 1) % sourcesCount);
 			iter--;
 		}
-		if(iter <= 0) { //No free audiosource has been found
+		if (iter <= 0)
+		{ //No free audiosource has been found
 			Debug.Log("Trying to play soundFX while all sources are busy");
 			return;
 		}
@@ -177,6 +179,11 @@ public class AudioManager : MonoBehaviour
 		StartCoroutine(PlayAfter(loop, intro.length, pitch));
 	}
 
+	public void StopMusic()
+	{
+		musicSource.Stop();
+	}
+
 	private IEnumerator PlayAfter(AudioClip loop, float time, float pitch)
 	{
 		yield return new WaitForSeconds(time);
@@ -209,7 +216,7 @@ public class AudioManager : MonoBehaviour
 	{
 		float elapsedTime = 0;
 		float initialSpeed = musicSource.pitch;
-		while(time - elapsedTime > 0)
+		while (time - elapsedTime > 0)
 		{
 			musicSource.pitch = Mathf.Lerp(initialSpeed, newSpeed, elapsedTime / time);
 			elapsedTime += Time.deltaTime;

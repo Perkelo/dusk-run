@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Extensions;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class LevelShipwreck : Level, LevelDelegate
 {
-	[SerializeField] [Range(0, 1)] private float terosSpawningProbability = 0.2f;
+	[SerializeField][Range(0, 1)] private float terosSpawningProbability = 0.2f;
 	[SerializeField] private GameObject teros;
 
 	[SerializeField] private GameObject cannonball;
@@ -27,12 +29,24 @@ public class LevelShipwreck : Level, LevelDelegate
 
 	public override void OnGameOver()
 	{
-		throw new System.NotImplementedException();
+		GameManager.instance.warning.enabled = false;
 	}
 
 	public override void OnLevelEnded()
 	{
-		throw new System.NotImplementedException();
+		GameManager.instance.paused = true;
+
+		AudioManager.instance.PlaySoundFX(AudioManager.AudioFX.Win);
+
+		this.RunAfter(0.5f, delegate
+		{
+			GameManager.instance.DisplayLore("The end", "This is the end of the currently developed game", delegate
+			{
+				AudioManager.instance.StopMusic();
+				SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+			});
+			LevelData.UnloadScene(LevelData.LevelScene.Level2, delegate { });
+		});
 	}
 
 	public void OnPlatformCreated(GameObject platform)
@@ -45,7 +59,9 @@ public class LevelShipwreck : Level, LevelDelegate
 				platform.transform.position.x + Random.Range(-extents.x, extents.x),
 				platform.transform.position.y + extents.y + 1,
 				0));
-		} else {
+		}
+		else
+		{
 			//SpawnCannonball(cannonball);
 		}
 	}

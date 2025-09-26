@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class Movement : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class Movement : MonoBehaviour
 	private Vector2 movement = Vector2.zero;
 	[SerializeField] private bool isFastFalling = false;
 	[SerializeField] private short maxJumps = 3;
-	[SerializeField]  private short jumpCounter = 0;
+	[SerializeField] private short jumpCounter = 0;
 
 	[SerializeField] private bool grounded = false;
 	[SerializeField] public bool stuck = false;
@@ -43,7 +44,8 @@ public class Movement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if(movementDisabled){
+		if (movementDisabled)
+		{
 			return;
 		}
 		GroundCheck();
@@ -148,7 +150,7 @@ public class Movement : MonoBehaviour
 			{
 				isFastFalling = true;
 				Vector2 newVelocity = rb2d.linearVelocity;
-				newVelocity.y = /*Mathf.Max(newVelocity.y, 0)*/ - fastFallInitialForce;
+				newVelocity.y = /*Mathf.Max(newVelocity.y, 0)*/ -fastFallInitialForce;
 				rb2d.linearVelocity = newVelocity;
 			}
 		}
@@ -160,10 +162,20 @@ public class Movement : MonoBehaviour
 
 	public void Quit(InputAction.CallbackContext context)
 	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#elif UNITY_WEBGL
+		// If running in WebGL, redirect to main menu scene instead of quitting the application
+		AudioManager.instance.StopMusic();
+		SceneManager.LoadScene("MainMenu");
+#else
 		Application.Quit();
+#endif
+
 	}
 
-	public void SetSpeed(float levelSpeed) {
+	public void SetSpeed(float levelSpeed)
+	{
 		this.speed = levelSpeed * 20;
 	}
 }

@@ -9,7 +9,7 @@ abstract public class Level : MonoBehaviour
 	public float levelSpeed;
 	public int length;
 	public AudioManager.Music levelMusic;
-	
+
 	[SerializeField] private GameObject platform;
 	[SerializeField] private Transform levelGeometry;
 	private readonly List<Transform> levelPlatforms = new List<Transform>();
@@ -28,7 +28,7 @@ abstract public class Level : MonoBehaviour
 		}
 	}
 
-	protected LevelDelegate? levelDelegate;
+	protected LevelDelegate levelDelegate;
 
 	abstract public void OnGameOver();
 
@@ -42,13 +42,14 @@ abstract public class Level : MonoBehaviour
 		{
 			Destroy(p.gameObject);
 		}
-		
+
 		foreach (Transform e in enemies)
 		{
 			Destroy(e.gameObject);
 		}
 
-		foreach(Transform c in cannonballs) {
+		foreach (Transform c in cannonballs)
+		{
 			Destroy(c.gameObject);
 		}
 
@@ -150,22 +151,27 @@ abstract public class Level : MonoBehaviour
 		}
 	}
 
-	protected void MoveCannonballs() {
-		if(cannonballs.Count == 0) {
+	protected void MoveCannonballs()
+	{
+		if (cannonballs.Count == 0)
+		{
 			return;
 		}
 
-		foreach(Transform c in cannonballs) {
+		foreach (Transform c in cannonballs)
+		{
 			c.Translate(-levelSpeed * c.GetComponent<Cannonball>().relativeSpeedMultiplier, 0, 0);
 		}
 
-		if(cannonballs[0].position.x < Camera.main.transform.position.x - 80) {
+		if (cannonballs[0].position.x < Camera.main.transform.position.x - 80)
+		{
 			Destroy(cannonballs[0].gameObject);
 			cannonballs.RemoveAt(0);
 		}
 	}
 
-	protected void SpawnCannonball(GameObject cannonball) {
+	protected void SpawnCannonball(GameObject cannonball)
+	{
 		GameObject newCannonball = Instantiate(cannonball);
 		newCannonball.transform.position = new Vector2(GameManager.instance.player.transform.position.x + 25, 30);
 		newCannonball.GetComponent<Rigidbody2D>().linearVelocity = Vector2.down * 20;
@@ -173,7 +179,8 @@ abstract public class Level : MonoBehaviour
 		cannonballs.Add(newCannonball.transform);
 	}
 
-	public void DestroyCannonball(GameObject cannonball) {
+	public void DestroyCannonball(GameObject cannonball)
+	{
 		cannonballs.Remove(cannonball.transform);
 		Destroy(cannonball.gameObject);
 	}
